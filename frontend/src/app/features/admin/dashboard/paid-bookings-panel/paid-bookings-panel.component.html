@@ -28,7 +28,7 @@
         @for (r of reservations; track r._id) {
           <tr>
             <td>{{ r.playerName }}</td>
-            <td>{{ r.ReserveDate }}</td>
+            <td>{{ formatDate(r.ReserveDate) }}</td>
             <td class="no-wrap">{{ formatTime(r.StartTime) }} – {{ formatTime(r.EndTime) }}</td>
             <td>{{ formatPaymentMethod(r.paymentMethod) }}</td>
             <td class="no-wrap">{{ r.paymentAmount }}</td>

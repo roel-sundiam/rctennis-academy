@@ -28,6 +28,37 @@
 
   <main class="admin-main">
     <section class="admin-panel">
+      <!-- Today's Schedule -->
+      <div class="today-schedule">
+        <div class="today-schedule__header">
+          <span class="today-schedule__title">📅 Today — {{ todayLabel }}</span>
+        </div>
+        @if (todayLoading) {
+          <div class="today-schedule__empty">
+            <span class="spinner" style="width:14px;height:14px;margin:0;"></span> Loading...
+          </div>
+        } @else if (todayBookings.length === 0 && todayBlocked.length === 0) {
+          <div class="today-schedule__empty">No bookings or blocked slots today.</div>
+        } @else {
+          <div class="today-schedule__list">
+            @for (b of todayBookings; track b._id) {
+              <div class="today-slot today-slot--booking">
+                <span class="today-slot__time">{{ formatTime(b.StartTime) }} – {{ formatTime(b.EndTime) }}</span>
+                <span class="today-slot__name">{{ b.playerName }}</span>
+                <span class="badge badge--{{ b.status }}">{{ b.status }}</span>
+              </div>
+            }
+            @for (s of todayBlocked; track s._id) {
+              <div class="today-slot today-slot--blocked">
+                <span class="today-slot__time">{{ formatTime(s.StartTime) }} – {{ formatTime(s.EndTime) }}</span>
+                <span class="today-slot__name">{{ s.reason }}</span>
+                <span class="badge badge--rejected">Blocked</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
       <nav class="admin-cards" role="navigation" aria-label="Admin sections">
         <button class="admin-card admin-card--bookings" [class.admin-card--active]="activeTab === 'bookings'" (click)="setTab('bookings')" [attr.aria-label]="'Bookings' + (pendingBadgeCount > 0 ? ', ' + pendingBadgeCount + ' pending' : '')">
           <span class="admin-card__icon">📋</span>
@@ -86,8 +117,7 @@
           </div>
           <p class="toast-card__body">
             <strong>{{ toast.playerName }}</strong><br />
-            {{ toast.ReserveDate }}&nbsp;&nbsp;{{ toast.StartTime }}–{{ toast.EndTime }}<br />
-            Court: {{ toast.courtId }}
+            {{ formatDate(toast.ReserveDate) }}&nbsp;&nbsp;{{ toast.StartTime }}–{{ toast.EndTime }}<br />
           </p>
           <button class="toast-card__action" (click)="setTab('bookings')">View Pending</button>
         </div>

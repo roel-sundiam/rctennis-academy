@@ -97,6 +97,11 @@ export class BookingsPanelComponent implements OnInit {
     });
   }
 
+  formatDate(d: string): string {
+    const [y, m, day] = d.split('-').map(Number);
+    return new Date(y, m - 1, day).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
   formatTime(t: string): string {
     const [h, m] = t.split(':').map(Number);
     const suffix = h >= 12 ? 'PM' : 'AM';

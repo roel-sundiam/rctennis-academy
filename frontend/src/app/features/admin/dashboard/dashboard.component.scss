@@ -130,6 +130,93 @@
   overflow: hidden;
 }
 
+// ── Today's Schedule strip ────────────────────────────────────────
+.today-schedule {
+  border-bottom: 1px solid #e2e6ee;
+  padding: 14px 20px;
+  background: #f8faff;
+
+  &__header {
+    margin-bottom: 10px;
+  }
+
+  &__title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #3a4660;
+    letter-spacing: 0.01em;
+  }
+
+  &__empty {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #9aa5b8;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  @media (max-width: 620px) {
+    padding: 12px 14px;
+  }
+}
+
+.today-slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  border-left: 3px solid transparent;
+
+  &--booking {
+    background: #f0f6ff;
+    border-left-color: #114aae;
+  }
+
+  &--blocked {
+    background: #fff5f5;
+    border-left-color: #dc2626;
+  }
+
+  &__time {
+    font-weight: 600;
+    color: #1e3a6e;
+    white-space: nowrap;
+    min-width: 130px;
+  }
+
+  &__name {
+    flex: 1;
+    color: #2d3a50;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__court {
+    color: #6b7280;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+    gap: 4px;
+
+    &__time { min-width: unset; }
+    &__court { display: none; }
+  }
+}
+
 // ── Card grid navigation ─────────────────────────────────────────
 .admin-cards {
   display: grid;

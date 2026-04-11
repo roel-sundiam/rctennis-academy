@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { ReservationService } from '../../core/services/reservation.service';
@@ -18,11 +19,14 @@ interface CalendarDay {
 
 @Component({
   selector: 'app-schedule',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './schedule.component.html',
   styleUrl: './schedule.component.scss',
 })
 export class ScheduleComponent implements OnInit {
+  activeTab: 'calendar' | 'list' = 'calendar';
+  selectedPlayer = '';
+
   weeks: CalendarDay[][] = [];
   monthLabel = '';
   selectedDay: CalendarDay | null = null;
@@ -77,7 +81,7 @@ export class ScheduleComponent implements OnInit {
         this.blockedSlots = blocked;
         this.buildCalendar();
         this.loading = false;
-        const today = new Date().toISOString().split('T')[0];
+        const today = this.localDateStr();
         const todayCell = this.weeks.flat().find((d) => d.date === today);
         if (todayCell) this.selectedDay = todayCell;
         this.cdr.detectChanges();
@@ -93,7 +97,7 @@ export class ScheduleComponent implements OnInit {
   private buildCalendar(): void {
     const year = this.currentYear;
     const month = this.currentMonth;
-    const today = new Date().toISOString().split('T')[0];
+    const today = this.localDateStr();
 
     this.monthLabel = new Date(year, month, 1).toLocaleString('default', {
       month: 'long',
@@ -155,6 +159,40 @@ export class ScheduleComponent implements OnInit {
     for (let i = 0; i < days.length; i += 7) {
       this.weeks.push(days.slice(i, i + 7));
     }
+  }
+
+  get playerNames(): string[] {
+    const names = this.bookings.map(b => b.playerName);
+    return [...new Set(names)].sort();
+  }
+
+  get allDays(): CalendarDay[] {
+    const days = this.weeks.flat().filter(d => d.day && (d.bookings.length > 0 || d.blocked.length > 0));
+    if (!this.selectedPlayer) return days;
+    if (this.selectedPlayer === '__blocked__') {
+      return days
+        .map(d => ({ ...d, bookings: [] }))
+        .filter(d => d.blocked.length > 0);
+    }
+    return days
+      .map(d => ({
+        ...d,
+        bookings: d.bookings.filter(b => b.playerName === this.selectedPlayer),
+        blocked: [],
+      }))
+      .filter(d => d.bookings.length > 0);
+  }
+
+  formatDate(dateStr: string): string {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString('en-US', {
+      month: 'long', day: 'numeric', year: 'numeric'
+    });
+  }
+
+  private localDateStr(): string {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   }
 
   formatTime(t: string): string {

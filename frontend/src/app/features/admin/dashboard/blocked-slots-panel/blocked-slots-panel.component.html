@@ -81,7 +81,7 @@
       <!-- Summary -->
       @if (form.StartTime && form.EndTime && form.ReserveDate) {
         <div class="alert alert--error">
-          &#128683; Blocking {{ form.ReserveDate }} &nbsp;
+          &#128683; Blocking {{ formatDate(form.ReserveDate) }} &nbsp;
           {{ formatTime(form.StartTime) }} &ndash; {{ formatTime(form.EndTime) }}
         </div>
       }
@@ -116,10 +116,9 @@
           <span class="badge badge--rejected">Blocked</span>
         </div>
         <span class="booking-card__meta">
-          &#128197; {{ slot.ReserveDate }} &nbsp;|&nbsp;
+          &#128197; {{ formatDate(slot.ReserveDate) }} &nbsp;|&nbsp;
           &#128337; {{ formatTime(slot.StartTime) }} &ndash; {{ formatTime(slot.EndTime) }}
         </span>
-        <span class="booking-card__meta">{{ slot.courtId }}</span>
         <div class="booking-card__actions">
           <button class="btn btn-danger btn-sm"
             [disabled]="deleteLoading[slot._id]"

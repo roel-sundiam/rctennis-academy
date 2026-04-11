@@ -55,7 +55,6 @@
           <th>Player</th>
           <th>Date</th>
           <th>Time</th>
-          <th>Court</th>
           @if (bookingStatus === 'pending') {
             <th>Payment</th>
             <th>Actions</th>
@@ -76,9 +75,8 @@
           <tr [class.row--error]="actionError[r._id]">
             <td class="col-num">{{ i + 1 }}</td>
             <td class="col-player">{{ r.playerName }}</td>
-            <td class="col-date">{{ r.ReserveDate }}</td>
+            <td class="col-date">{{ formatDate(r.ReserveDate) }}</td>
             <td class="col-time">{{ formatTime(r.StartTime) }} – {{ formatTime(r.EndTime) }}</td>
-            <td class="col-court">{{ r.courtId }}</td>
 
             @if (bookingStatus === 'pending') {
               <td class="col-payment">

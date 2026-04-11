@@ -14,27 +14,49 @@
 
   <main class="schedule-main">
     <section class="schedule-panel">
-      <div class="schedule-panel__top">
-        <div class="schedule-month-nav">
-          <button class="schedule-month-nav__btn" (click)="prevMonth()" aria-label="Previous month">
-            &#8249;
-          </button>
-          <h1 class="schedule-month-nav__label">{{ monthLabel }}</h1>
-          <button class="schedule-month-nav__btn" (click)="nextMonth()" aria-label="Next month">
-            &#8250;
-          </button>
-        </div>
+      <!-- View tabs -->
+      <nav class="schedule-tabs">
+        <button class="schedule-tab" [class.active]="activeTab === 'calendar'" (click)="activeTab = 'calendar'">
+          📅 Calendar
+        </button>
+        <button class="schedule-tab" [class.active]="activeTab === 'list'" (click)="activeTab = 'list'">
+          📋 All Schedules
+        </button>
+      </nav>
 
-        <div class="schedule-legend" aria-label="Schedule legend">
-          <span class="schedule-legend__item">
-            <span class="cal-dot"></span>
-            <span>Booked</span>
-          </span>
-          <span class="schedule-legend__item">
-            <span class="cal-dot cal-dot--blocked"></span>
-            <span>Blocked</span>
-          </span>
-        </div>
+      <div class="schedule-panel__top">
+        @if (activeTab === 'calendar') {
+          <div class="schedule-month-nav">
+            <button class="schedule-month-nav__btn" (click)="prevMonth()" aria-label="Previous month">
+              &#8249;
+            </button>
+            <h1 class="schedule-month-nav__label">{{ monthLabel }}</h1>
+            <button class="schedule-month-nav__btn" (click)="nextMonth()" aria-label="Next month">
+              &#8250;
+            </button>
+          </div>
+
+          <div class="schedule-legend" aria-label="Schedule legend">
+            <span class="schedule-legend__item">
+              <span class="cal-dot"></span>
+              <span>Booked</span>
+            </span>
+            <span class="schedule-legend__item">
+              <span class="cal-dot cal-dot--blocked"></span>
+              <span>Blocked</span>
+            </span>
+          </div>
+        } @else {
+          <div class="schedule-month-nav">
+            <button class="schedule-month-nav__btn" (click)="prevMonth()" aria-label="Previous month">
+              &#8249;
+            </button>
+            <h1 class="schedule-month-nav__label">{{ monthLabel }}</h1>
+            <button class="schedule-month-nav__btn" (click)="nextMonth()" aria-label="Next month">
+              &#8250;
+            </button>
+          </div>
+        }
       </div>
 
       @if (errorMessage) {
@@ -46,7 +68,7 @@
           <div class="spinner schedule-loading__spinner"></div>
           Loading schedule...
         </div>
-      } @else {
+      } @else if (activeTab === 'calendar') {
         <div class="schedule-calendar">
           <div class="cal-grid">
             @for (day of weekDays; track day) {
@@ -59,9 +81,7 @@
                   class="cal-cell"
                   [class.cal-cell--empty]="!cell.day"
                   [class.cal-cell--today]="cell.isToday"
-                  [class.cal-cell--has-bookings]="
-                    cell.bookings.length > 0 || cell.blocked.length > 0
-                  "
+                  [class.cal-cell--has-bookings]="cell.bookings.length > 0 || cell.blocked.length > 0"
                   [class.cal-cell--selected]="selectedDay?.date === cell.date"
                   (click)="selectDay(cell)"
                 >
@@ -85,17 +105,13 @@
         @if (selectedDay && selectedDay.day) {
           <section class="schedule-day-card">
             <div class="schedule-day-card__header">
-              <span class="schedule-day-card__date">{{ selectedDay.date }}</span>
+              <span class="schedule-day-card__date">{{ formatDate(selectedDay.date) }}</span>
               <div class="schedule-day-card__badges">
                 @if (selectedDay.bookings.length > 0) {
-                  <span class="badge badge--approved"
-                    >{{ selectedDay.bookings.length }} booked</span
-                  >
+                  <span class="badge badge--approved">{{ selectedDay.bookings.length }} booked</span>
                 }
                 @if (selectedDay.blocked.length > 0) {
-                  <span class="badge badge--rejected"
-                    >{{ selectedDay.blocked.length }} blocked</span
-                  >
+                  <span class="badge badge--rejected">{{ selectedDay.blocked.length }} blocked</span>
                 }
               </div>
             </div>
@@ -111,29 +127,73 @@
                     <span class="schedule-item__name">{{ b.playerName }}</span>
                     <span class="badge badge--approved">Booked</span>
                   </div>
-                  <span class="schedule-item__meta"
-                    >&#128337; {{ formatTime(b.StartTime) }} &ndash;
-                    {{ formatTime(b.EndTime) }}</span
-                  >
-                  <span class="schedule-item__meta">{{ b.courtId }}</span>
+                  <span class="schedule-item__meta">&#128337; {{ formatTime(b.StartTime) }} &ndash; {{ formatTime(b.EndTime) }}</span>
                 </article>
               }
-
               @for (s of selectedDay.blocked; track s._id) {
                 <article class="schedule-item schedule-item--blocked">
                   <div class="schedule-item__top">
                     <span class="schedule-item__name">{{ s.reason }}</span>
                     <span class="badge badge--rejected">Blocked</span>
                   </div>
-                  <span class="schedule-item__meta"
-                    >&#128337; {{ formatTime(s.StartTime) }} &ndash;
-                    {{ formatTime(s.EndTime) }}</span
-                  >
-                  <span class="schedule-item__meta">{{ s.courtId }}</span>
+                  <span class="schedule-item__meta">&#128337; {{ formatTime(s.StartTime) }} &ndash; {{ formatTime(s.EndTime) }}</span>
                 </article>
               }
             </div>
           </section>
+        }
+      } @else {
+        <!-- List view -->
+        <div class="slist-filter">
+          <label class="slist-filter__label" for="playerFilter">Filter by player</label>
+          <select id="playerFilter" class="slist-filter__select" [(ngModel)]="selectedPlayer">
+            <option value="">All</option>
+            @for (name of playerNames; track name) {
+              <option [value]="name">{{ name }}</option>
+            }
+            <option value="__blocked__">🚫 Blocked Slots</option>
+          </select>
+          @if (selectedPlayer) {
+            <button class="slist-filter__clear" (click)="selectedPlayer = ''">✕ Clear</button>
+          }
+        </div>
+
+        @if (allDays.length === 0) {
+          <div class="schedule-empty">No bookings or blocked slots for {{ monthLabel }}.</div>
+        } @else {
+          <div class="schedule-list-view">
+            @for (day of allDays; track day.date) {
+              <div class="slist-day">
+                <div class="slist-day__header" [class.slist-day__header--today]="day.isToday">
+                  <span class="slist-day__date">{{ formatDate(day.date) }}</span>
+                  <div class="slist-day__badges">
+                    @if (day.bookings.length > 0) {
+                      <span class="badge badge--approved">{{ day.bookings.length }} booked</span>
+                    }
+                    @if (day.blocked.length > 0) {
+                      <span class="badge badge--rejected">{{ day.blocked.length }} blocked</span>
+                    }
+                  </div>
+                </div>
+                <div class="slist-day__items">
+                  @for (b of day.bookings; track b._id) {
+                    <div class="slist-item slist-item--booking">
+                      <span class="slist-item__time">{{ formatTime(b.StartTime) }} – {{ formatTime(b.EndTime) }}</span>
+                      <span class="slist-item__name">{{ b.playerName }}</span>
+                      <span class="badge badge--approved">Booked</span>
+                    </div>
+                  }
+                  @for (s of day.blocked; track s._id) {
+                    <div class="slist-item slist-item--blocked">
+                      <span class="slist-item__time">{{ formatTime(s.StartTime) }} – {{ formatTime(s.EndTime) }}</span>
+                      <span class="slist-item__name">{{ s.reason }}</span>
+                      <span class="badge badge--rejected">Blocked</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
         }
       }
     </section>
