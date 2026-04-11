@@ -9,6 +9,7 @@ import { BlockedSlotService } from '../../../core/services/blocked-slot.service'
 import { BookingsPanelComponent } from './bookings-panel/bookings-panel.component';
 import { PlayersPanelComponent } from './players-panel/players-panel.component';
 import { AdminProfilePanelComponent } from '../profile-panel/admin-profile-panel.component';
+import { VisitorMonitorComponent } from './visitor-monitor/visitor-monitor.component';
 import { Reservation } from '../../../models/reservation.model';
 import { BlockedSlot } from '../../../models/blocked-slot.model';
 
@@ -22,6 +23,7 @@ type AdminTab = 'bookings' | 'players';
     BookingsPanelComponent,
     PlayersPanelComponent,
     AdminProfilePanelComponent,
+    VisitorMonitorComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

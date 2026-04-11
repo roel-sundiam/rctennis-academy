@@ -1,0 +1,30 @@
+<div class="vm-box" [class.vm-box--minimized]="minimized">
+
+  <!-- Header / title bar -->
+  <div class="vm-header" (click)="toggle()">
+    <span class="vm-header__dot" [class.vm-header__dot--error]="!connected" [title]="connected ? 'Connected' : 'Cannot reach server'"></span>
+    <span class="vm-header__title">Live Visitors</span>
+    <span class="vm-header__badge">{{ entries.length }}</span>
+    @if (entries.length > 0) {
+      <button class="vm-header__clear" (click)="$event.stopPropagation(); clear()" title="Clear feed">&#x2715;</button>
+    }
+    <span class="vm-header__toggle">{{ minimized ? '▲' : '▼' }}</span>
+  </div>
+
+  <!-- Feed body -->
+  @if (!minimized) {
+    <div class="vm-feed" #feedEl>
+      @if (entries.length === 0) {
+        <div class="vm-empty">Waiting for visitors…</div>
+      }
+      @for (entry of entries; track entry.timestamp + entry.page) {
+        <div class="vm-entry" [class.vm-entry--auth]="entry.userType === 'authenticated'">
+          <span class="vm-entry__time">{{ formatTime(entry.timestamp) }}</span>
+          <span class="vm-entry__user">{{ displayUser(entry) }}</span>
+          <span class="vm-entry__page">{{ formatPage(entry.page) }}</span>
+        </div>
+      }
+    </div>
+  }
+
+</div>
