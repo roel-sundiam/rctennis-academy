@@ -27,8 +27,10 @@ export class VisitorMonitorComponent implements OnInit, OnDestroy {
   entries: VisitEntry[] = [];
   minimized = false;
   connected = false;
+  soundEnabled = true;
   private lastTimestamp: string | null = null;
   private pollTimer: ReturnType<typeof setInterval> | null = null;
+  private audioCtx: AudioContext | null = null;
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
@@ -39,10 +41,15 @@ export class VisitorMonitorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.pollTimer) clearInterval(this.pollTimer);
+    this.audioCtx?.close();
   }
 
   toggle(): void {
     this.minimized = !this.minimized;
+  }
+
+  toggleSound(): void {
+    this.soundEnabled = !this.soundEnabled;
   }
 
   clear(): void {
@@ -85,8 +92,9 @@ export class VisitorMonitorComponent implements OnInit, OnDestroy {
       next: data => {
         this.connected = true;
         if (!data.length) return;
-        this.entries = [...this.entries, ...data].slice(-100); // keep last 100
+        this.entries = [...this.entries, ...data].slice(-100);
         this.lastTimestamp = data[data.length - 1].timestamp;
+        this.playChime();
         this.cdr.markForCheck();
         this.scrollToBottom();
       },
@@ -95,6 +103,36 @@ export class VisitorMonitorComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  private playChime(): void {
+    if (!this.soundEnabled) return;
+    try {
+      if (!this.audioCtx) {
+        this.audioCtx = new AudioContext();
+      }
+      const ctx = this.audioCtx;
+
+      // Short two-tone chime: high note then slightly lower
+      const notes = [1046.5, 783.99]; // C6, G5
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+
+        const start = ctx.currentTime + i * 0.12;
+        gain.gain.setValueAtTime(0, start);
+        gain.gain.linearRampToValueAtTime(0.18, start + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.25);
+
+        osc.start(start);
+        osc.stop(start + 0.25);
+      });
+    } catch { /* AudioContext unavailable — silently skip */ }
   }
 
   private scrollToBottom(): void {

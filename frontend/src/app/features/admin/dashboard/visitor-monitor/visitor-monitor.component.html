@@ -5,6 +5,9 @@
     <span class="vm-header__dot" [class.vm-header__dot--error]="!connected" [title]="connected ? 'Connected' : 'Cannot reach server'"></span>
     <span class="vm-header__title">Live Visitors</span>
     <span class="vm-header__badge">{{ entries.length }}</span>
+    <button class="vm-header__sound" (click)="$event.stopPropagation(); toggleSound()" [title]="soundEnabled ? 'Mute' : 'Unmute'">
+      {{ soundEnabled ? '🔔' : '🔕' }}
+    </button>
     @if (entries.length > 0) {
       <button class="vm-header__clear" (click)="$event.stopPropagation(); clear()" title="Clear feed">&#x2715;</button>
     }
