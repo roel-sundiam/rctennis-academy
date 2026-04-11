@@ -1,0 +1,113 @@
+.admin-login-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(42, 168, 255, 0.16), transparent 38%),
+    radial-gradient(circle at 90% 6%, rgba(217, 221, 226, 0.72), transparent 34%),
+    linear-gradient(180deg, #f8faff 0%, #eef2f8 100%);
+}
+
+.admin-login-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e6ee;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(28, 43, 68, 0.06);
+}
+
+.admin-login-header__logo {
+  width: clamp(120px, 20vw, 210px);
+  height: auto;
+  max-height: 56px;
+  object-fit: contain;
+}
+
+.admin-login-header__home {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.46rem 0.8rem;
+  font-size: 0.79rem;
+  font-weight: 600;
+  border: 1px solid #bec9dc;
+  color: #1f3764;
+  background: rgba(255, 255, 255, 0.86);
+  text-decoration: none;
+}
+
+.admin-login-main {
+  min-height: calc(100vh - 76px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.admin-login-card {
+  width: min(430px, 100%);
+  background: color-mix(in srgb, #ffffff 93%, #f0f3fa 7%);
+  border: 1px solid #d8deea;
+  border-radius: 20px;
+  box-shadow: 0 16px 34px rgba(11, 47, 122, 0.12);
+  padding: 1rem;
+}
+
+.admin-login-card__intro h1 {
+  margin: 0;
+  color: #0b2f7a;
+  font-size: clamp(1.35rem, 3.8vw, 2rem);
+}
+
+.admin-login-card__intro p {
+  margin-top: 0.42rem;
+  color: #4f5f78;
+}
+
+.admin-login-card .alert {
+  margin-top: 0.85rem;
+}
+
+.admin-login-form {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.admin-login-page .form-control:focus {
+  border-color: #114aae;
+  box-shadow: 0 0 0 3px rgba(17, 74, 174, 0.16);
+}
+
+.admin-login-submit {
+  margin-top: 0.2rem;
+  border: 1px solid #0e3f9f;
+  background: linear-gradient(120deg, #114aae 0%, #0b2f7a 100%);
+  box-shadow: 0 10px 22px rgba(11, 47, 122, 0.28);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.admin-login-submit:hover:not(:disabled) {
+  background: linear-gradient(120deg, #1659c9 0%, #0d3485 100%);
+}
+
+.admin-login-submit:focus-visible {
+  outline: 3px solid rgba(42, 168, 255, 0.35);
+  outline-offset: 2px;
+}
+
+.admin-login-submit__spinner {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border-width: 2px;
+  border-color: rgba(255, 255, 255, 0.38);
+  border-top-color: #ffffff;
+}

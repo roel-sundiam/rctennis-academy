@@ -1,0 +1,206 @@
+.admin-dashboard-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 8%, rgba(42, 168, 255, 0.16), transparent 38%),
+    radial-gradient(circle at 92% 6%, rgba(217, 221, 226, 0.72), transparent 34%),
+    linear-gradient(180deg, #f8faff 0%, #eef2f8 100%);
+  padding-bottom: 1.2rem;
+}
+
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e6ee;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(28, 43, 68, 0.06);
+}
+
+.admin-header__brand {
+  display: flex;
+  align-items: center;
+}
+
+.admin-header__logo {
+  width: clamp(120px, 20vw, 210px);
+  height: auto;
+  max-height: 56px;
+  object-fit: contain;
+}
+
+.admin-header__actions {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.admin-header__btn {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.46rem 0.8rem;
+  font-size: 0.79rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+
+.admin-header__btn--ghost {
+  color: #1f3764;
+  border-color: #bec9dc;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.admin-header__btn--solid {
+  color: #ffffff;
+  background: linear-gradient(120deg, #114aae 0%, #0b2f7a 100%);
+  border-color: #0f3e98;
+}
+
+.admin-header__user-wrap {
+  position: relative;
+  cursor: pointer;
+}
+
+.admin-header__user {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.79rem;
+  font-weight: 600;
+  color: #3a4e6e;
+  padding: 0.46rem 0.8rem;
+  border-radius: 999px;
+  background: #f0f4fb;
+  border: 1px solid #d0d9ea;
+}
+
+.admin-header__user.active {
+  background: #e2eaf7;
+  border-color: #a8bce0;
+}
+
+.admin-header__btn--analytics {
+  color: #1a6b3a;
+  border-color: #b2d8bf;
+  background: #edf7f1;
+  cursor: pointer;
+}
+
+.admin-main {
+  width: min(1080px, 100%);
+  margin: 1rem auto 0;
+  padding: 0 1rem;
+}
+
+.admin-panel {
+  background: color-mix(in srgb, #ffffff 93%, #f0f3fa 7%);
+  border: 1px solid #d8deea;
+  border-radius: 20px;
+  box-shadow: 0 14px 32px rgba(11, 47, 122, 0.1);
+  overflow: hidden;
+}
+
+.admin-tabs {
+  border-bottom: 1px solid #d8deea;
+  padding: 0.25rem 0.5rem 0;
+  background: #f7f9ff;
+}
+
+.admin-tabs .tab {
+  border-bottom: 2px solid transparent;
+  color: #4f5f78;
+  font-weight: 600;
+}
+
+.admin-tabs .tab:hover {
+  color: #114aae;
+}
+
+.admin-tabs .tab.active {
+  color: #114aae;
+  border-bottom-color: #114aae;
+}
+
+.admin-panel__content {
+  padding: 0.9rem;
+}
+
+:host ::ng-deep .admin-panel__content .card {
+  background: #ffffff;
+  border: 1px solid #d8deea;
+  box-shadow: 0 8px 20px rgba(11, 47, 122, 0.08);
+}
+
+:host ::ng-deep .admin-panel__content .card--flat {
+  border-color: #d8deea;
+  box-shadow: none;
+  background: #f8faff;
+}
+
+:host ::ng-deep .admin-panel__content .booking-card {
+  border: 1px solid #d8deea;
+  background: #ffffff;
+}
+
+:host ::ng-deep .admin-panel__content .booking-card__name {
+  color: #163f80;
+}
+
+:host ::ng-deep .admin-panel__content .booking-card__meta,
+:host ::ng-deep .admin-panel__content .text-muted,
+:host ::ng-deep .admin-panel__content .form-hint {
+  color: #5f7090;
+}
+
+:host ::ng-deep .admin-panel__content .btn-primary,
+:host ::ng-deep .admin-panel__content .btn-success {
+  border-color: #0e3f9f;
+  background: linear-gradient(120deg, #114aae 0%, #0b2f7a 100%);
+  color: #ffffff;
+}
+
+:host ::ng-deep .admin-panel__content .btn-secondary {
+  color: #1f3764;
+  border-color: #bec9dc;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+:host ::ng-deep .admin-panel__content .btn-danger {
+  color: #ffffff;
+  border-color: #9e2632;
+  background: linear-gradient(120deg, #c03445 0%, #9f1d2f 100%);
+}
+
+:host ::ng-deep .admin-panel__content .time-btn:hover:not(.time-btn--selected) {
+  border-color: #114aae;
+  color: #114aae;
+  background: #eef3ff;
+}
+
+:host ::ng-deep .admin-panel__content .time-btn--selected {
+  background: linear-gradient(120deg, #114aae 0%, #0b2f7a 100%);
+  border-color: #0b2f7a;
+  color: #ffffff;
+}
+
+@media (max-width: 620px) {
+  .admin-header {
+    padding: 0.7rem 0.75rem;
+  }
+
+  .admin-header__btn {
+    padding-inline: 0.68rem;
+    font-size: 0.76rem;
+  }
+
+  .admin-panel__content {
+    padding: 0.7rem;
+  }
+}

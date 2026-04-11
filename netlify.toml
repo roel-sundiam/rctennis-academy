@@ -1,0 +1,19 @@
+[build]
+  command = "npm --prefix backend install && npm --prefix frontend install && npm --prefix frontend run build"
+  publish = "frontend/dist/frontend/browser"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Route all /api/* calls to the Express serverless function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# SPA fallback — send all other routes to Angular's index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

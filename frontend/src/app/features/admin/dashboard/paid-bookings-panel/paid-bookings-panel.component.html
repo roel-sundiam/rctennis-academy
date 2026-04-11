@@ -1,0 +1,42 @@
+@if (loading) {
+  <div class="loading-row">
+    <div class="spinner" style="margin:0;"></div>
+    Loading paid bookings...
+  </div>
+} @else if (errorMessage) {
+  <div class="alert alert--error">{{ errorMessage }}</div>
+} @else if (reservations.length === 0) {
+  <div class="empty-state">
+    <div style="font-size: 2rem;">💳</div>
+    <p>No paid bookings yet.</p>
+  </div>
+} @else {
+  <div class="paid-table-wrap">
+    <table class="paid-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Method</th>
+          <th>Amount</th>
+          <th>Reference</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of reservations; track r._id) {
+          <tr>
+            <td>{{ r.playerName }}</td>
+            <td>{{ r.ReserveDate }}</td>
+            <td class="no-wrap">{{ formatTime(r.StartTime) }} – {{ formatTime(r.EndTime) }}</td>
+            <td>{{ formatPaymentMethod(r.paymentMethod) }}</td>
+            <td class="no-wrap">{{ r.paymentAmount }}</td>
+            <td>{{ r.paymentReference || '—' }}</td>
+            <td><span class="badge badge--{{ r.status }}">{{ r.status }}</span></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

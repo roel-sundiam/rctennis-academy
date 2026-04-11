@@ -1,0 +1,215 @@
+.analytics-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 8%, rgba(42, 168, 255, 0.16), transparent 38%),
+    radial-gradient(circle at 92% 6%, rgba(217, 221, 226, 0.72), transparent 34%),
+    linear-gradient(180deg, #f8faff 0%, #eef2f8 100%);
+  padding-bottom: 1.2rem;
+}
+
+// Header — matches .admin-header exactly
+.analytics-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e6ee;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(28, 43, 68, 0.06);
+
+  &__brand {
+    display: flex;
+    align-items: center;
+  }
+
+  &__logo {
+    width: clamp(120px, 20vw, 210px);
+    height: auto;
+    max-height: 56px;
+    object-fit: contain;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.45rem;
+  }
+
+  &__btn {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0.46rem 0.8rem;
+    font-size: 0.79rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+
+    &--ghost {
+      color: #1f3764;
+      border-color: #bec9dc;
+      background: rgba(255, 255, 255, 0.78);
+    }
+  }
+}
+
+// Main content — matches .admin-main
+.analytics-main {
+  width: min(1080px, 100%);
+  margin: 1rem auto 0;
+  padding: 0 1rem 1rem;
+}
+
+// Panel wrapper — matches .admin-panel
+.analytics-panel {
+  background: color-mix(in srgb, #ffffff 93%, #f0f3fa 7%);
+  border: 1px solid #d8deea;
+  border-radius: 20px;
+  box-shadow: 0 14px 32px rgba(11, 47, 122, 0.1);
+  overflow: hidden;
+  padding: 1.2rem;
+}
+
+.analytics-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+
+  h1 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #114aae;
+    margin: 0;
+  }
+}
+
+.analytics-user-badge {
+  font-size: 0.78rem;
+  color: #5f7090;
+  background: #eef3ff;
+  border: 1px solid #d8deea;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.analytics-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #5f7090;
+  padding: 2rem 0;
+}
+
+// Summary cards
+.analytics-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.analytics-card {
+  background: #ffffff;
+  border: 1px solid #d8deea;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(11, 47, 122, 0.07);
+  padding: 1rem;
+  text-align: center;
+
+  &__value {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #114aae;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  &__label {
+    font-size: 0.75rem;
+    color: #5f7090;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}
+
+// Table sections
+.analytics-section {
+  background: #ffffff;
+  border: 1px solid #d8deea;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(11, 47, 122, 0.07);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+
+  h2 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #114aae;
+    margin: 0 0 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+
+  th {
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #5f7090;
+    padding: 6px 8px;
+    border-bottom: 2px solid #d8deea;
+  }
+
+  td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eef1f7;
+    color: #1f3764;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  &__count {
+    text-align: right;
+    font-weight: 700;
+    color: #114aae;
+  }
+}
+
+@media (max-width: 620px) {
+  .analytics-header {
+    padding: 0.7rem 0.75rem;
+  }
+
+  .analytics-header__btn {
+    padding-inline: 0.68rem;
+    font-size: 0.76rem;
+  }
+
+  .analytics-panel {
+    padding: 0.7rem;
+  }
+
+  .analytics-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}

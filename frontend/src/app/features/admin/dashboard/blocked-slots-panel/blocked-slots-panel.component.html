@@ -1,0 +1,133 @@
+<div class="cluster mb-md" style="justify-content: space-between;">
+  <h3>Blocked Schedules</h3>
+  @if (!showForm) {
+    <button class="btn btn-danger btn-sm" (click)="openForm()">+ Block a Slot</button>
+  }
+</div>
+
+@if (errorMessage) {
+  <div class="alert alert--error mb-md">{{ errorMessage }}</div>
+}
+
+<!-- Add Block Form -->
+@if (showForm) {
+  <div class="card card--flat mb-md">
+    <h4 style="margin-bottom: var(--space-md);">Block a Time Slot</h4>
+
+    @if (formError) {
+      <div class="alert alert--error mb-md">{{ formError }}</div>
+    }
+
+    <div class="stack">
+
+      <!-- Date -->
+      <div class="form-group">
+        <label class="form-label">Date <span class="required">*</span></label>
+        <input #blockDateInput type="text" class="form-control" placeholder="Select a date" readonly />
+      </div>
+
+      <!-- Start Time -->
+      <div class="form-group">
+        <label class="form-label">Start Time <span class="required">*</span></label>
+        <div class="time-grid">
+          @for (slot of timeSlots; track slot) {
+            <button type="button" class="time-btn"
+              [class.time-btn--selected]="form.StartTime === slot"
+              (click)="selectStartTime(slot)">
+              {{ formatTime(slot) }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- End Time -->
+      <div class="form-group">
+        <label class="form-label">End Time <span class="required">*</span></label>
+        @if (!form.StartTime) {
+          <p class="form-hint">Select a start time first.</p>
+        } @else {
+          <div class="time-grid">
+            @for (slot of endTimeSlots; track slot) {
+              <button type="button" class="time-btn"
+                [class.time-btn--selected]="form.EndTime === slot"
+                (click)="selectEndTime(slot)">
+                {{ formatTime(slot) }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Reason -->
+      <div class="form-group">
+        <label class="form-label">Reason <span class="required">*</span></label>
+        <div class="reason-grid">
+          @for (r of reasonPresets; track r) {
+            <button type="button" class="time-btn"
+              [class.time-btn--selected]="form.reason === r"
+              (click)="selectReason(r)">
+              {{ r }}
+            </button>
+          }
+        </div>
+
+        @if (form.reason === 'Other') {
+          <input type="text" class="form-control mt-sm"
+            [(ngModel)]="customReason"
+            placeholder="Describe the reason..." />
+        }
+      </div>
+
+      <!-- Summary -->
+      @if (form.StartTime && form.EndTime && form.ReserveDate) {
+        <div class="alert alert--error">
+          &#128683; Blocking {{ form.ReserveDate }} &nbsp;
+          {{ formatTime(form.StartTime) }} &ndash; {{ formatTime(form.EndTime) }}
+        </div>
+      }
+
+      <div class="cluster">
+        <button class="btn btn-danger" [disabled]="formLoading" (click)="submitForm()">
+          @if (formLoading) { Saving... } @else { Confirm Block }
+        </button>
+        <button class="btn btn-secondary" (click)="cancelForm()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Blocked Slots List -->
+@if (loading) {
+  <div class="loading-row">
+    <div class="spinner" style="margin:0;"></div>
+    Loading...
+  </div>
+} @else if (slots.length === 0 && !showForm) {
+  <div class="empty-state">
+    <div style="font-size: 2rem;">&#128274;</div>
+    <p>No blocked schedules.</p>
+  </div>
+} @else {
+  <div class="stack stack--sm">
+    @for (slot of slots; track slot._id) {
+      <div class="booking-card" style="border-left: 3px solid var(--color-error);">
+        <div class="cluster" style="justify-content: space-between;">
+          <span class="booking-card__name">{{ slot.reason }}</span>
+          <span class="badge badge--rejected">Blocked</span>
+        </div>
+        <span class="booking-card__meta">
+          &#128197; {{ slot.ReserveDate }} &nbsp;|&nbsp;
+          &#128337; {{ formatTime(slot.StartTime) }} &ndash; {{ formatTime(slot.EndTime) }}
+        </span>
+        <span class="booking-card__meta">{{ slot.courtId }}</span>
+        <div class="booking-card__actions">
+          <button class="btn btn-danger btn-sm"
+            [disabled]="deleteLoading[slot._id]"
+            (click)="deleteSlot(slot._id)">
+            @if (deleteLoading[slot._id]) { Removing... } @else { Remove Block }
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+}

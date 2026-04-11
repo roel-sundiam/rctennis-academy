@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build output
+frontend/dist/
+
+# Netlify
+.netlify/
+
+# Environment variables — contains database credentials and secrets
+backend/.env
+
+# Admin credentials — contains plaintext passwords, never commit
+ADMIN_ACCOUNTS.md
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db

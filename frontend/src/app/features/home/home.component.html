@@ -1,0 +1,95 @@
+<section class="home">
+  <div class="home__bg-shape home__bg-shape--left" aria-hidden="true"></div>
+  <div class="home__bg-shape home__bg-shape--right" aria-hidden="true"></div>
+
+  <div class="home__container">
+    <header class="home__hero card-surface">
+      <div class="home__brand-row">
+        <img src="/RCTennis.webp" alt="Renell Crescini Tennis Academy" class="home__logo" />
+      </div>
+
+      <h1 class="home__title">Book training sessions with a schedule that stays clear.</h1>
+      <p class="home__subtitle">
+        Plan sessions in minutes, see live availability, and submit training requests with
+        confidence.
+      </p>
+
+      <div class="home__actions">
+        <a routerLink="/book" class="home__btn home__btn--primary">Book Training</a>
+        <a routerLink="/schedule" class="home__btn home__btn--secondary">View Schedule</a>
+      </div>
+
+      <div class="home__stats" aria-label="Quick highlights">
+        <article class="home__stat">
+          <p class="home__stat-value">24/7</p>
+          <p class="home__stat-label">Booking Request Access</p>
+        </article>
+        <article class="home__stat">
+          <p class="home__stat-value">Live</p>
+          <p class="home__stat-label">Availability Visibility</p>
+        </article>
+        <article class="home__stat">
+          <p class="home__stat-value">1 Step</p>
+          <p class="home__stat-label">Admin Confirmation Flow</p>
+        </article>
+      </div>
+    </header>
+
+    <section class="home__section" aria-label="Platform features">
+      <article class="home__feature card-surface">
+        <div class="home__feature-badge">01</div>
+        <h2>See training activity at a glance</h2>
+        <p>
+          Use the monthly schedule to instantly see approved training sessions and available time
+          slots.
+        </p>
+      </article>
+
+      <article class="home__feature card-surface">
+        <div class="home__feature-badge">02</div>
+        <h2>Submit requests in seconds</h2>
+        <p>
+          Select player details, choose your preferred date and time, and send your training request
+          without friction.
+        </p>
+      </article>
+
+      <article class="home__feature card-surface">
+        <div class="home__feature-badge">03</div>
+        <h2>Track approvals clearly</h2>
+        <p>
+          Every request goes through a transparent admin review flow, so final reservations stay
+          accurate.
+        </p>
+      </article>
+    </section>
+
+    <section class="home__section home__section--notice" aria-label="Payment information">
+      <article class="home__notice card-surface">
+        <div class="home__notice-icon" aria-hidden="true">&#9888;</div>
+        <div class="home__notice-body">
+          <h2 class="home__notice-title">Payment Required for Approval</h2>
+          <p class="home__notice-desc">
+            Booking requests will <strong>not be approved</strong> until payment has been made.
+            Please complete your payment and provide proof before your session is confirmed.
+          </p>
+          <div class="home__payment-methods">
+            <span class="home__payment-badge">Maya</span>
+            <span class="home__payment-badge">GCash</span>
+            <span class="home__payment-badge">Bank Transfer &mdash; Maybank</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer class="home__footer">
+      <button class="home__admin-btn" (click)="goToAdmin()" aria-label="Go to Admin">
+        <span class="home__admin-btn-icon" aria-hidden="true">&#128274;</span>
+        <span class="home__admin-btn-text">
+          <strong>Admin Login</strong>
+          <small>Manage bookings and approvals</small>
+        </span>
+      </button>
+    </footer>
+  </div>
+</section>

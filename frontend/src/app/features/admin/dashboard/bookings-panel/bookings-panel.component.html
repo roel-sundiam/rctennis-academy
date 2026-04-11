@@ -1,0 +1,74 @@
+@if (loading) {
+  <div class="loading-row">
+    <div class="spinner" style="margin:0;"></div>
+    Loading bookings...
+  </div>
+} @else if (errorMessage) {
+  <div class="alert alert--error">{{ errorMessage }}</div>
+} @else if (reservations.length === 0) {
+  <div class="empty-state">
+    <div style="font-size: 2rem;">&#128203;</div>
+    <p>No {{ status }} bookings.</p>
+  </div>
+} @else {
+
+  <!-- Mobile: card list -->
+  <div class="stack" style="display: flex;" [style.display]="'none'" [class.show-mobile]="true">
+  </div>
+
+  <div class="stack stack--sm">
+    @for (r of reservations; track r._id) {
+      <div class="booking-card">
+        <div class="cluster" style="justify-content: space-between;">
+          <span class="booking-card__name">{{ r.playerName }}</span>
+          <span class="badge badge--{{ r.status }}">{{ r.status }}</span>
+        </div>
+        <span class="booking-card__meta">{{ r.ReserveDate }} &nbsp;|&nbsp; {{ formatTime(r.StartTime) }} – {{ formatTime(r.EndTime) }}</span>
+        <span class="booking-card__meta">{{ r.courtId }}</span>
+
+        @if (status === 'pending') {
+          <div class="booking-card__payment">
+            @if (r.paymentMade) {
+              <span class="payment-badge payment-badge--paid">Paid</span>
+              <span class="booking-card__meta">{{ formatPaymentMethod(r.paymentMethod) }} &nbsp;|&nbsp; {{ r.paymentAmount }}</span>
+              @if (r.paymentReference) {
+                <span class="booking-card__meta">Ref: {{ r.paymentReference }}</span>
+              }
+            } @else {
+              <span class="payment-badge payment-badge--unpaid">Unpaid</span>
+            }
+          </div>
+        }
+
+        @if (actionError[r._id]) {
+          <span class="form-error">{{ actionError[r._id] }}</span>
+        }
+
+        @if (status === 'pending') {
+          <div class="booking-card__actions">
+            <button
+              class="btn btn-success btn-sm"
+              [disabled]="actionLoading[r._id]"
+              (click)="approve(r._id)">
+              @if (actionLoading[r._id]) {
+                <span class="spinner" style="width:14px;height:14px;margin:0;"></span>
+              } @else {
+                Approve
+              }
+            </button>
+            <button
+              class="btn btn-danger btn-sm"
+              [disabled]="actionLoading[r._id]"
+              (click)="reject(r._id)">
+              Reject
+            </button>
+          </div>
+        }
+
+        @if (status === 'approved' && r.approvedBy) {
+          <span class="booking-card__meta">Approved by {{ r.approvedBy }}</span>
+        }
+      </div>
+    }
+  </div>
+}

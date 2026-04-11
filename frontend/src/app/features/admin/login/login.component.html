@@ -1,0 +1,60 @@
+<section class="admin-login-page">
+  <header class="admin-login-header">
+    <img src="/RCTennis.webp" alt="RC Tennis" class="admin-login-header__logo" />
+    <a routerLink="/" class="admin-login-header__home">Back to Home</a>
+  </header>
+
+  <main class="admin-login-main">
+    <section class="admin-login-card">
+      <div class="admin-login-card__intro">
+        <h1>Admin Portal</h1>
+        <p>Sign in to manage bookings, players, and blocked slots.</p>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="alert alert--error">{{ errorMessage() }}</div>
+      }
+
+      <form (ngSubmit)="submit()" novalidate class="admin-login-form">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input
+            id="username"
+            type="text"
+            class="form-control"
+            [(ngModel)]="form.username"
+            name="username"
+            autocomplete="username"
+            placeholder="Enter username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            class="form-control"
+            [(ngModel)]="form.password"
+            name="password"
+            autocomplete="current-password"
+            placeholder="Enter password"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary btn-block admin-login-submit"
+          [disabled]="submitting()"
+        >
+          @if (submitting()) {
+            <span class="spinner admin-login-submit__spinner"></span>
+            Signing in...
+          } @else {
+            Sign In
+          }
+        </button>
+      </form>
+    </section>
+  </main>
+</section>

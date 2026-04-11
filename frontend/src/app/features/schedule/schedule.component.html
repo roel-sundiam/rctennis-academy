@@ -1,0 +1,143 @@
+<section class="schedule-page">
+  <header class="schedule-header">
+    <div class="schedule-header__brand">
+      <img src="/RCTennis.webp" alt="RC Tennis" class="schedule-header__logo" />
+    </div>
+
+    <nav class="schedule-header__actions" aria-label="Schedule navigation">
+      <a routerLink="/" class="schedule-header__btn schedule-header__btn--ghost">Home</a>
+      <a routerLink="/book" class="schedule-header__btn schedule-header__btn--solid"
+        >Book Training</a
+      >
+    </nav>
+  </header>
+
+  <main class="schedule-main">
+    <section class="schedule-panel">
+      <div class="schedule-panel__top">
+        <div class="schedule-month-nav">
+          <button class="schedule-month-nav__btn" (click)="prevMonth()" aria-label="Previous month">
+            &#8249;
+          </button>
+          <h1 class="schedule-month-nav__label">{{ monthLabel }}</h1>
+          <button class="schedule-month-nav__btn" (click)="nextMonth()" aria-label="Next month">
+            &#8250;
+          </button>
+        </div>
+
+        <div class="schedule-legend" aria-label="Schedule legend">
+          <span class="schedule-legend__item">
+            <span class="cal-dot"></span>
+            <span>Booked</span>
+          </span>
+          <span class="schedule-legend__item">
+            <span class="cal-dot cal-dot--blocked"></span>
+            <span>Blocked</span>
+          </span>
+        </div>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert--error">{{ errorMessage }}</div>
+      }
+
+      @if (loading) {
+        <div class="schedule-loading">
+          <div class="spinner schedule-loading__spinner"></div>
+          Loading schedule...
+        </div>
+      } @else {
+        <div class="schedule-calendar">
+          <div class="cal-grid">
+            @for (day of weekDays; track day) {
+              <div class="cal-weekday">{{ day }}</div>
+            }
+
+            @for (week of weeks; track $index) {
+              @for (cell of week; track $index) {
+                <div
+                  class="cal-cell"
+                  [class.cal-cell--empty]="!cell.day"
+                  [class.cal-cell--today]="cell.isToday"
+                  [class.cal-cell--has-bookings]="
+                    cell.bookings.length > 0 || cell.blocked.length > 0
+                  "
+                  [class.cal-cell--selected]="selectedDay?.date === cell.date"
+                  (click)="selectDay(cell)"
+                >
+                  @if (cell.day) {
+                    <span class="cal-cell__day">{{ cell.day }}</span>
+                    <div class="cal-cell__dots">
+                      @for (b of cell.bookings.slice(0, 2); track b._id) {
+                        <span class="cal-dot"></span>
+                      }
+                      @for (s of cell.blocked.slice(0, 2); track s._id) {
+                        <span class="cal-dot cal-dot--blocked"></span>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </div>
+        </div>
+
+        @if (selectedDay && selectedDay.day) {
+          <section class="schedule-day-card">
+            <div class="schedule-day-card__header">
+              <span class="schedule-day-card__date">{{ selectedDay.date }}</span>
+              <div class="schedule-day-card__badges">
+                @if (selectedDay.bookings.length > 0) {
+                  <span class="badge badge--approved"
+                    >{{ selectedDay.bookings.length }} booked</span
+                  >
+                }
+                @if (selectedDay.blocked.length > 0) {
+                  <span class="badge badge--rejected"
+                    >{{ selectedDay.blocked.length }} blocked</span
+                  >
+                }
+              </div>
+            </div>
+
+            @if (selectedDay.bookings.length === 0 && selectedDay.blocked.length === 0) {
+              <div class="schedule-empty">No bookings or blocks on this day.</div>
+            }
+
+            <div class="schedule-list">
+              @for (b of selectedDay.bookings; track b._id) {
+                <article class="schedule-item">
+                  <div class="schedule-item__top">
+                    <span class="schedule-item__name">{{ b.playerName }}</span>
+                    <span class="badge badge--approved">Booked</span>
+                  </div>
+                  <span class="schedule-item__meta"
+                    >&#128337; {{ formatTime(b.StartTime) }} &ndash;
+                    {{ formatTime(b.EndTime) }}</span
+                  >
+                  <span class="schedule-item__meta">{{ b.courtId }}</span>
+                </article>
+              }
+
+              @for (s of selectedDay.blocked; track s._id) {
+                <article class="schedule-item schedule-item--blocked">
+                  <div class="schedule-item__top">
+                    <span class="schedule-item__name">{{ s.reason }}</span>
+                    <span class="badge badge--rejected">Blocked</span>
+                  </div>
+                  <span class="schedule-item__meta"
+                    >&#128337; {{ formatTime(s.StartTime) }} &ndash;
+                    {{ formatTime(s.EndTime) }}</span
+                  >
+                  <span class="schedule-item__meta">{{ s.courtId }}</span>
+                </article>
+              }
+            </div>
+          </section>
+        }
+      }
+    </section>
+  </main>
+
+  <a routerLink="/book" class="schedule-fab">+ Book Training</a>
+</section>

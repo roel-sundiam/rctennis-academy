@@ -1,0 +1,69 @@
+<section class="admin-dashboard-page">
+  <header class="admin-header">
+    <div class="admin-header__brand">
+      <a routerLink="/"><img src="/RCTennis.webp" alt="RC Tennis" class="admin-header__logo" /></a>
+    </div>
+
+    <div class="admin-header__actions">
+      @if (auth.isSuperAdmin()) {
+        <button class="admin-header__btn admin-header__btn--analytics" (click)="goToAnalytics()">&#128200; Analytics</button>
+      }
+      <a routerLink="/schedule" class="admin-header__btn admin-header__btn--ghost">Schedule</a>
+      @if (username) {
+        <div class="admin-header__user-wrap" (click)="$event.stopPropagation(); toggleProfile()">
+          <span class="admin-header__user" [class.active]="profileOpen">&#128274; {{ username }}</span>
+          @if (profileOpen) {
+            <app-admin-profile-panel
+              [username]="username"
+              [role]="auth.getRole() ?? ''"
+              (close)="profileOpen = false" />
+          }
+        </div>
+      }
+      <button class="admin-header__btn admin-header__btn--solid" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <section class="admin-panel">
+      <nav class="tabs admin-tabs">
+        <button class="tab" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
+          Pending
+        </button>
+        <button class="tab" [class.active]="activeTab === 'approved'" (click)="setTab('approved')">
+          Approved
+        </button>
+        <button class="tab" [class.active]="activeTab === 'rejected'" (click)="setTab('rejected')">
+          Rejected
+        </button>
+        <button class="tab" [class.active]="activeTab === 'players'" (click)="setTab('players')">
+          Players
+        </button>
+        <button class="tab" [class.active]="activeTab === 'blocked'" (click)="setTab('blocked')">
+          Blocked
+        </button>
+        <button class="tab" [class.active]="activeTab === 'paid'" (click)="setTab('paid')">
+          Paid
+        </button>
+      </nav>
+
+      <section class="admin-panel__content">
+        @if (isBookingTab) {
+          <app-bookings-panel [status]="bookingStatus" />
+        }
+
+        @if (activeTab === 'paid') {
+          <app-paid-bookings-panel />
+        }
+
+        @if (activeTab === 'players') {
+          <app-players-panel />
+        }
+
+        @if (activeTab === 'blocked') {
+          <app-blocked-slots-panel />
+        }
+      </section>
+    </section>
+  </main>
+</section>

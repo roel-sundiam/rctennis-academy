@@ -1,0 +1,102 @@
+<div class="cluster mb-md" style="justify-content: space-between;">
+  <h3>Players</h3>
+  @if (!showAddForm) {
+    <button class="btn btn-primary btn-sm" (click)="startAdd()">+ Add Player</button>
+  }
+</div>
+
+@if (errorMessage) {
+  <div class="alert alert--error mb-md">{{ errorMessage }}</div>
+}
+
+<!-- Add Player Form -->
+@if (showAddForm) {
+  <div class="card card--flat mb-md">
+    <h4 style="margin-bottom: var(--space-md);">New Player</h4>
+    @if (addError) {
+      <div class="alert alert--error mb-md">{{ addError }}</div>
+    }
+    <div class="stack">
+      <div class="form-group">
+        <label class="form-label" for="addName">Name <span class="required">*</span></label>
+        <input id="addName" type="text" class="form-control" [(ngModel)]="addForm.name" placeholder="Full name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="addContact">Contact Number</label>
+        <input id="addContact" type="tel" class="form-control" [(ngModel)]="addForm.contactNumber" placeholder="Optional" />
+      </div>
+      <div class="cluster">
+        <button class="btn btn-primary btn-sm" [disabled]="addLoading" (click)="submitAdd()">
+          @if (addLoading) { Saving... } @else { Save Player }
+        </button>
+        <button class="btn btn-secondary btn-sm" (click)="cancelAdd()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Players List -->
+@if (loading) {
+  <div class="loading-row">
+    <div class="spinner" style="margin:0;"></div>
+    Loading players...
+  </div>
+} @else if (players.length === 0) {
+  <div class="empty-state">
+    <p>No players yet. Add one above.</p>
+  </div>
+} @else {
+  <div class="stack stack--sm">
+    @for (player of players; track player._id) {
+
+      <!-- Edit mode -->
+      @if (editingId === player._id) {
+        <div class="card card--flat">
+          @if (editError) {
+            <div class="alert alert--error mb-md">{{ editError }}</div>
+          }
+          <div class="stack">
+            <div class="form-group">
+              <label class="form-label">Name <span class="required">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="editForm.name" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Number</label>
+              <input type="tel" class="form-control" [(ngModel)]="editForm.contactNumber" />
+            </div>
+            <div class="cluster">
+              <button class="btn btn-primary btn-sm" [disabled]="editLoading" (click)="submitEdit()">
+                @if (editLoading) { Saving... } @else { Save }
+              </button>
+              <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+      <!-- Display mode -->
+      } @else {
+        <div class="booking-card" [style.opacity]="player.isActive ? '1' : '0.5'">
+          <div class="cluster" style="justify-content: space-between;">
+            <div>
+              <span class="booking-card__name">{{ player.name }}</span>
+              @if (!player.isActive) {
+                <span class="badge badge--rejected" style="margin-left: 8px;">Inactive</span>
+              }
+            </div>
+            <div class="cluster">
+              @if (player.isActive) {
+                <button class="btn btn-secondary btn-sm" (click)="startEdit(player)">Edit</button>
+                <button class="btn btn-danger btn-sm" [disabled]="deleteLoading[player._id]" (click)="deletePlayer(player._id)">
+                  @if (deleteLoading[player._id]) { ... } @else { Deactivate }
+                </button>
+              }
+            </div>
+          </div>
+          @if (player.contactNumber) {
+            <span class="booking-card__meta">{{ player.contactNumber }}</span>
+          }
+        </div>
+      }
+    }
+  </div>
+}

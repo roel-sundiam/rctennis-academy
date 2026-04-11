@@ -1,0 +1,28 @@
+/* Bookings panel uses global design system only */
+
+.booking-card__payment {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.payment-badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  &--paid {
+    background: #dcfce7;
+    color: #15803d;
+  }
+
+  &--unpaid {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+}
