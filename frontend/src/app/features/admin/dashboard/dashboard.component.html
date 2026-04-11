@@ -29,6 +29,11 @@
       <nav class="tabs admin-tabs">
         <button class="tab" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
           Pending
+          @if (pendingBadgeCount > 0) {
+            <span class="notif-badge" [attr.aria-label]="pendingBadgeCount + ' new bookings'">
+              {{ pendingBadgeCount > 99 ? '99+' : pendingBadgeCount }}
+            </span>
+          }
         </button>
         <button class="tab" [class.active]="activeTab === 'approved'" (click)="setTab('approved')">
           Approved
@@ -66,4 +71,24 @@
       </section>
     </section>
   </main>
+
+  @if (toasts.length > 0) {
+    <div class="toast-stack" role="status" aria-live="polite">
+      @for (toast of toasts; track toast._id) {
+        <div class="toast-card">
+          <div class="toast-card__header">
+            <span class="toast-card__icon">🎾</span>
+            <strong class="toast-card__title">New Booking</strong>
+            <button class="toast-card__close" (click)="dismissToast(toast._id)" aria-label="Dismiss">&#10005;</button>
+          </div>
+          <p class="toast-card__body">
+            <strong>{{ toast.playerName }}</strong><br />
+            {{ toast.ReserveDate }}&nbsp;&nbsp;{{ toast.StartTime }}–{{ toast.EndTime }}<br />
+            Court: {{ toast.courtId }}
+          </p>
+          <button class="toast-card__action" (click)="setTab('pending')">View Pending</button>
+        </div>
+      }
+    </div>
+  }
 </section>
