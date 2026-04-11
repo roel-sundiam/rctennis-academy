@@ -93,6 +93,29 @@
   cursor: pointer;
 }
 
+.admin-header__logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid #fca5a5;
+  background: #fff1f1;
+  color: #dc2626;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease, transform 100ms ease;
+
+  &:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #ffffff;
+    transform: scale(1.08);
+  }
+
+  &:active { transform: scale(0.95); }
+}
+
 .admin-main {
   width: min(1080px, 100%);
   margin: 1rem auto 0;
@@ -107,25 +130,130 @@
   overflow: hidden;
 }
 
-.admin-tabs {
-  border-bottom: 1px solid #d8deea;
-  padding: 0.25rem 0.5rem 0;
-  background: #f7f9ff;
+// ── Card grid navigation ─────────────────────────────────────────
+.admin-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 20px 20px 0;
+
+  @media (max-width: 620px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 14px 14px 0;
+  }
 }
 
-.admin-tabs .tab {
-  border-bottom: 2px solid transparent;
-  color: #4f5f78;
-  font-weight: 600;
+.admin-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 12px 16px;
+  background: #ffffff;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+  overflow: hidden;
+
+  // colour strip at the top of every card
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    border-radius: 14px 14px 0 0;
+    background: var(--card-accent, #114aae);
+    transition: height 200ms ease;
+  }
+
+  transition: transform 150ms ease, box-shadow 150ms ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.13);
+
+    &::before { height: 6px; }
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+
+  &.admin-card--active {
+    border-color: var(--card-accent, #114aae);
+    background: var(--card-bg, #eef3fb);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+
+    .admin-card__icon { transform: scale(1.15); }
+    .admin-card__label { color: var(--card-accent, #114aae); }
+  }
+
+  &__icon {
+    font-size: 1.75rem;
+    line-height: 1;
+    transition: transform 200ms ease;
+  }
+
+  &__label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #3a4660;
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+
+  &--link { text-decoration: none; }
+
+  &__badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin-left: 0;
+  }
+
+  @media (max-width: 620px) {
+    padding: 16px 8px 12px;
+
+    &__icon { font-size: 1.5rem; }
+    &__label { font-size: 0.72rem; }
+  }
 }
 
-.admin-tabs .tab:hover {
-  color: #114aae;
+// ── Per-card accent colours ───────────────────────────────────────
+.admin-card--bookings,
+.admin-card--players,
+.admin-card--schedule,
+.admin-card--analytics,
+.admin-card--payments,
+.admin-card--tournament { --card-accent: #114aae; --card-bg: #eef3fb; }
+
+// ── Coming Soon badge ─────────────────────────────────────────────
+.admin-card__soon {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #94a3b8;
+  border-radius: 999px;
+  padding: 2px 7px;
+  margin-top: 2px;
 }
 
-.admin-tabs .tab.active {
-  color: #114aae;
-  border-bottom-color: #114aae;
+// ── Disabled card state ───────────────────────────────────────────
+.admin-card:disabled {
+  cursor: default;
+  transform: none !important;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.08)) !important;
+
+  &::before { height: 4px !important; }
 }
 
 .admin-panel__content {

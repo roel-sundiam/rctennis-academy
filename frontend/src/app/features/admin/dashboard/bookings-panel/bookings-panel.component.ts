@@ -1,25 +1,21 @@
-import { Component, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReservationService } from '../../../../core/services/reservation.service';
 import { Reservation, ReservationStatus } from '../../../../models/reservation.model';
+import { BlockedSlotsPanelComponent } from '../blocked-slots-panel/blocked-slots-panel.component';
+
+type BookingFilter = ReservationStatus | 'paid' | 'blocked';
 
 @Component({
   selector: 'app-bookings-panel',
-  imports: [CommonModule],
+  imports: [CommonModule, BlockedSlotsPanelComponent],
   templateUrl: './bookings-panel.component.html',
   styleUrl: './bookings-panel.component.scss'
 })
-export class BookingsPanelComponent {
-  private _status: ReservationStatus = 'pending';
+export class BookingsPanelComponent implements OnInit {
+  @Input() pendingCount = 0;
 
-  @Input()
-  set status(value: ReservationStatus) {
-    this._status = value;
-    this.load();
-  }
-  get status(): ReservationStatus {
-    return this._status;
-  }
+  bookingStatus: BookingFilter = 'pending';
 
   reservations: Reservation[] = [];
   loading = false;
@@ -32,12 +28,30 @@ export class BookingsPanelComponent {
     private cdr: ChangeDetectorRef
   ) {}
 
+  ngOnInit(): void {
+    this.load();
+  }
+
+  setBookingStatus(status: BookingFilter): void {
+    this.bookingStatus = status;
+    this.load();
+  }
+
   load(): void {
+    if (this.bookingStatus === 'blocked') return;
+
     this.loading = true;
     this.errorMessage = '';
-    this.reservationService.getReservations(this._status).subscribe({
+
+    const obs = this.bookingStatus === 'paid'
+      ? this.reservationService.getReservations(undefined, true)
+      : this.reservationService.getReservations(this.bookingStatus);
+
+    obs.subscribe({
       next: res => {
-        this.reservations = res;
+        this.reservations = this.bookingStatus === 'paid'
+          ? res.filter(r => r.paymentMade === true)
+          : res;
         this.loading = false;
         this.cdr.detectChanges();
       },

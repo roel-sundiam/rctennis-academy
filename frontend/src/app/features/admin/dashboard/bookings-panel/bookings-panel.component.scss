@@ -1,28 +1,132 @@
-/* Bookings panel uses global design system only */
-
-.booking-card__payment {
+// ── Status filter tabs ────────────────────────────────────────────
+.bookings-filter {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.6rem;
-  margin-top: 0.25rem;
+  gap: 6px;
+  padding: 14px 16px 0;
+  border-bottom: 1px solid #e2e6ee;
+  background: #f8faff;
 }
 
+.bookings-filter__tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #5f7090;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+  margin-bottom: -1px;
+
+  &:hover { color: #1e3a6e; background: #eef2fb; }
+
+  &.active {
+    color: var(--tab-accent, #2563eb);
+    border-bottom-color: var(--tab-accent, #2563eb);
+    background: #fff;
+  }
+
+  &--pending  { --tab-accent: #d97706; }
+  &--approved { --tab-accent: #16a34a; }
+  &--rejected { --tab-accent: #dc2626; }
+  &--paid     { --tab-accent: #7c3aed; }
+  &--blocked  { --tab-accent: #64748b; }
+}
+
+// ── Blocked slots wrapper ─────────────────────────────────────────
+.blocked-wrap {
+  padding: 14px;
+}
+
+// ── Table wrapper (horizontal scroll on mobile) ───────────────────
+.bookings-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 14px 0 4px;
+}
+
+// ── Table ─────────────────────────────────────────────────────────
+.bookings-table {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+
+  thead tr {
+    background: #f0f4fb;
+    border-bottom: 2px solid #d8deea;
+  }
+
+  th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #4f5f78;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #eaeff7;
+    transition: background 120ms ease;
+
+    &:hover { background: #f5f8ff; }
+    &:last-child { border-bottom: none; }
+    &.row--error { background: #fff5f5; }
+  }
+
+  td {
+    padding: 11px 14px;
+    color: #2d3a50;
+    vertical-align: middle;
+  }
+}
+
+// ── Column widths ─────────────────────────────────────────────────
+.col-num      { color: #9aa5b8; font-size: 0.75rem; width: 36px; }
+.col-player   { font-weight: 600; color: #163f80; }
+.col-date     { white-space: nowrap; }
+.col-time     { white-space: nowrap; color: #4f5f78; }
+.col-court    { color: #4f5f78; }
+.col-payment  { white-space: nowrap; }
+.col-actions  { white-space: nowrap; }
+.col-approvedby { color: #4f5f78; font-style: italic; }
+.col-method     { color: #4f5f78; }
+.col-amount     { font-weight: 600; color: #163f80; white-space: nowrap; }
+.col-ref        { color: #6b7280; font-size: 0.78rem; }
+.col-status     { white-space: nowrap; }
+
+// ── Payment badges ────────────────────────────────────────────────
 .payment-badge {
   display: inline-block;
-  padding: 0.15rem 0.55rem;
+  padding: 2px 8px;
   border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 700;
   letter-spacing: 0.02em;
 
-  &--paid {
-    background: #dcfce7;
-    color: #15803d;
-  }
+  &--paid   { background: #dcfce7; color: #15803d; }
+  &--unpaid { background: #fee2e2; color: #b91c1c; }
+}
 
-  &--unpaid {
-    background: #fee2e2;
-    color: #b91c1c;
-  }
+.payment-detail {
+  display: block;
+  font-size: 0.72rem;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+// ── Action buttons ────────────────────────────────────────────────
+.action-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }

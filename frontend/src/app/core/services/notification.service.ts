@@ -44,6 +44,9 @@ export class NotificationService implements OnDestroy {
   checkForNewBookings(): void {
     this.reservationService.getReservations('pending').subscribe({
       next: (reservations) => {
+        // Always keep the badge in sync with the real total
+        this.newBookingCount$.next(reservations.length);
+
         if (!this.seeded) {
           reservations.forEach((r) => this.knownIds.add(r._id));
           this.seeded = true;
@@ -62,7 +65,7 @@ export class NotificationService implements OnDestroy {
   }
 
   triggerNotification(reservation: Reservation): void {
-    this.newBookingCount$.next(this.newBookingCount$.getValue() + 1);
+    // Count is already updated by checkForNewBookings; only fire sound/toast/browser notif
     this.newBooking$.next(reservation);
     this.playNotificationSound();
     this.showBrowserNotification(reservation);

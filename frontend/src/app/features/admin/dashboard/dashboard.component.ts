@@ -6,12 +6,10 @@ import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { BookingsPanelComponent } from './bookings-panel/bookings-panel.component';
 import { PlayersPanelComponent } from './players-panel/players-panel.component';
-import { BlockedSlotsPanelComponent } from './blocked-slots-panel/blocked-slots-panel.component';
-import { PaidBookingsPanelComponent } from './paid-bookings-panel/paid-bookings-panel.component';
 import { AdminProfilePanelComponent } from '../profile-panel/admin-profile-panel.component';
-import { Reservation, ReservationStatus } from '../../../models/reservation.model';
+import { Reservation } from '../../../models/reservation.model';
 
-type AdminTab = 'pending' | 'approved' | 'rejected' | 'players' | 'blocked' | 'paid';
+type AdminTab = 'bookings' | 'players';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,15 +18,13 @@ type AdminTab = 'pending' | 'approved' | 'rejected' | 'players' | 'blocked' | 'p
     RouterLink,
     BookingsPanelComponent,
     PlayersPanelComponent,
-    BlockedSlotsPanelComponent,
-    PaidBookingsPanelComponent,
     AdminProfilePanelComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  activeTab: AdminTab = 'pending';
+  activeTab: AdminTab = 'bookings';
   profileOpen = false;
 
   pendingBadgeCount = 0;
@@ -80,9 +76,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   setTab(tab: AdminTab): void {
     this.activeTab = tab;
-    if (tab === 'pending') {
-      this.notificationService.clearNewBookings();
-    }
   }
 
   goToAnalytics(): void {
@@ -98,11 +91,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return this.auth.getUsername();
   }
 
-  get bookingStatus(): ReservationStatus {
-    return this.activeTab as ReservationStatus;
-  }
-
-  get isBookingTab(): boolean {
-    return this.activeTab === 'pending' || this.activeTab === 'approved' || this.activeTab === 'rejected';
-  }
 }
