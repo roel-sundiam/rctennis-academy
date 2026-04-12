@@ -118,6 +118,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  isCurrentSlot(startTime: string, endTime: string): boolean {
+    const now = new Date();
+    const [sh, sm] = startTime.split(':').map(Number);
+    const [eh, em] = endTime.split(':').map(Number);
+    const start = sh * 60 + sm;
+    const end = eh * 60 + em;
+    const current = now.getHours() * 60 + now.getMinutes();
+    return current >= start && current < end;
+  }
+
   formatDate(d: string): string {
     const [y, m, day] = d.split('-').map(Number);
     return new Date(y, m - 1, day).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });

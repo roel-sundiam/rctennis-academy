@@ -55,7 +55,7 @@
         } @else {
           <div class="today-schedule__list">
             @for (b of todayBookings; track b._id) {
-              <div class="today-slot today-slot--booking">
+              <div class="today-slot today-slot--booking" [class.today-slot--current]="isCurrentSlot(b.StartTime, b.EndTime)">
                 <span class="today-slot__time"
                   >{{ formatTime(b.StartTime) }} – {{ formatTime(b.EndTime) }}</span
                 >
@@ -64,7 +64,7 @@
               </div>
             }
             @for (s of todayBlocked; track s._id) {
-              <div class="today-slot today-slot--blocked">
+              <div class="today-slot today-slot--blocked" [class.today-slot--current]="isCurrentSlot(s.StartTime, s.EndTime)">
                 <span class="today-slot__time"
                   >{{ formatTime(s.StartTime) }} – {{ formatTime(s.EndTime) }}</span
                 >

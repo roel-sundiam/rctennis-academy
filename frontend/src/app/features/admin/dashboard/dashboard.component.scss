@@ -192,6 +192,36 @@
     border-left-color: #dc2626;
   }
 
+  &--current {
+    background: #fefce8;
+    border-left-color: #d97706;
+    border-left-width: 4px;
+    box-shadow: 0 0 0 1px rgba(217, 119, 6, 0.2), 0 2px 8px rgba(217, 119, 6, 0.12);
+
+    .today-slot__time {
+      color: #92400e;
+      font-weight: 700;
+    }
+
+    .today-slot__name {
+      color: #92400e;
+      font-weight: 600;
+    }
+
+    &::after {
+      content: '▶ NOW';
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #fff;
+      background: #d97706;
+      border-radius: 999px;
+      padding: 2px 7px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+  }
+
   &__time {
     font-weight: 600;
     color: #1e3a6e;
