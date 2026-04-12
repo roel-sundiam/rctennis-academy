@@ -472,6 +472,11 @@
   object-fit: contain;
 }
 
+.landing-certs__item--dark-bg img {
+  mix-blend-mode: screen !important;
+  filter: brightness(1.1) !important;
+}
+
 .landing-certs__item--no-bg img {
   filter: brightness(1.8) contrast(1.1) grayscale(20%) !important;
   mix-blend-mode: multiply !important;
