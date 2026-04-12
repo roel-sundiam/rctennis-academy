@@ -473,8 +473,8 @@
 }
 
 .landing-certs__item--dark-bg img {
-  mix-blend-mode: screen !important;
-  filter: brightness(1.1) !important;
+  mix-blend-mode: normal !important;
+  filter: invert(1) hue-rotate(180deg) !important;
 }
 
 .landing-certs__item--no-bg img {
