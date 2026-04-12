@@ -104,7 +104,10 @@
   background: #fff1f1;
   color: #dc2626;
   cursor: pointer;
-  transition: background 150ms ease, border-color 150ms ease, transform 100ms ease;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    transform 100ms ease;
 
   &:hover {
     background: #dc2626;
@@ -113,7 +116,9 @@
     transform: scale(1.08);
   }
 
-  &:active { transform: scale(0.95); }
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
 .admin-main {
@@ -212,8 +217,12 @@
     flex-wrap: wrap;
     gap: 4px;
 
-    &__time { min-width: unset; }
-    &__court { display: none; }
+    &__time {
+      min-width: unset;
+    }
+    &__court {
+      display: none;
+    }
   }
 }
 
@@ -259,13 +268,17 @@
     transition: height 200ms ease;
   }
 
-  transition: transform 150ms ease, box-shadow 150ms ease;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
 
   &:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.13);
 
-    &::before { height: 6px; }
+    &::before {
+      height: 6px;
+    }
   }
 
   &:active {
@@ -277,8 +290,12 @@
     background: var(--card-bg, #eef3fb);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 
-    .admin-card__icon { transform: scale(1.15); }
-    .admin-card__label { color: var(--card-accent, #114aae); }
+    .admin-card__icon {
+      transform: scale(1.15);
+    }
+    .admin-card__label {
+      color: var(--card-accent, #114aae);
+    }
   }
 
   &__icon {
@@ -296,7 +313,9 @@
     letter-spacing: 0.01em;
   }
 
-  &--link { text-decoration: none; }
+  &--link {
+    text-decoration: none;
+  }
 
   &__badge {
     position: absolute;
@@ -308,8 +327,12 @@
   @media (max-width: 620px) {
     padding: 16px 8px 12px;
 
-    &__icon { font-size: 1.5rem; }
-    &__label { font-size: 0.72rem; }
+    &__icon {
+      font-size: 1.5rem;
+    }
+    &__label {
+      font-size: 0.72rem;
+    }
   }
 }
 
@@ -319,7 +342,10 @@
 .admin-card--schedule,
 .admin-card--analytics,
 .admin-card--payments,
-.admin-card--tournament { --card-accent: #114aae; --card-bg: #eef3fb; }
+.admin-card--tournament {
+  --card-accent: #114aae;
+  --card-bg: #eef3fb;
+}
 
 // ── Coming Soon badge ─────────────────────────────────────────────
 .admin-card__soon {
@@ -338,9 +364,11 @@
 .admin-card:disabled {
   cursor: default;
   transform: none !important;
-  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.08)) !important;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.08)) !important;
 
-  &::before { height: 4px !important; }
+  &::before {
+    height: 4px !important;
+  }
 }
 
 .admin-panel__content {
@@ -442,8 +470,15 @@
 }
 
 @keyframes badge-pulse {
-  0%, 100% { transform: scale(1);    opacity: 1; }
-  50%       { transform: scale(1.12); opacity: 0.85; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.85;
+  }
 }
 
 /* ── In-app toast stack ──────────────────────────────────────────────────── */
@@ -475,8 +510,14 @@
 }
 
 @keyframes toast-in {
-  from { transform: translateX(110%); opacity: 0; }
-  to   { transform: translateX(0);    opacity: 1; }
+  from {
+    transform: translateX(110%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .toast-card__header {
@@ -507,7 +548,10 @@
   border-radius: 4px;
   line-height: 1;
 
-  &:hover { color: #4f5f78; background: #f0f4fb; }
+  &:hover {
+    color: #4f5f78;
+    background: #f0f4fb;
+  }
 }
 
 .toast-card__body {
@@ -530,7 +574,10 @@
   margin-top: 0.15rem;
   font-family: var(--font);
 
-  &:hover { background: #eef3ff; border-color: #114aae; }
+  &:hover {
+    background: #eef3ff;
+    border-color: #114aae;
+  }
 }
 
 @media (max-width: 480px) {
