@@ -1,4 +1,5 @@
 const Player = require('../models/Player');
+const Reservation = require('../models/Reservation');
 
 async function getPlayers(req, res, next) {
   try {
@@ -44,6 +45,7 @@ async function updatePlayer(req, res, next) {
       { new: true, runValidators: true }
     );
     if (!player) return res.status(404).json({ message: 'Player not found.' });
+    await Reservation.updateMany({ playerId: player._id }, { playerName: player.name });
     res.json(player);
   } catch (err) {
     next(err);
