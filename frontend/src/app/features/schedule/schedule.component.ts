@@ -167,7 +167,8 @@ export class ScheduleComponent implements OnInit {
   }
 
   get allDays(): CalendarDay[] {
-    const days = this.weeks.flat().filter(d => d.day && (d.bookings.length > 0 || d.blocked.length > 0));
+    const today = this.localDateStr();
+    const days = this.weeks.flat().filter(d => d.day && d.date >= today && (d.bookings.length > 0 || d.blocked.length > 0));
     if (!this.selectedPlayer) return days;
     if (this.selectedPlayer === '__blocked__') {
       return days
