@@ -465,6 +465,18 @@
   gap: clamp(1.25rem, 3vw, 2.5rem);
 }
 
+.landing-certs__item--wide img {
+  height: 45px !important;
+  width: auto !important;
+  max-width: 120px !important;
+  object-fit: contain;
+}
+
+.landing-certs__item--no-bg img {
+  filter: brightness(1.8) contrast(1.1) grayscale(20%) !important;
+  mix-blend-mode: multiply !important;
+}
+
 .landing-certs__item {
   display: flex;
   align-items: center;
