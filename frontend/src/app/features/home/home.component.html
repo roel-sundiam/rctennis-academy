@@ -1,95 +1,236 @@
-<section class="home">
-  <div class="home__bg-shape home__bg-shape--left" aria-hidden="true"></div>
-  <div class="home__bg-shape home__bg-shape--right" aria-hidden="true"></div>
+<div class="landing">
 
-  <div class="home__container">
-    <header class="home__hero card-surface">
-      <div class="home__brand-row">
-        <img src="/RCTennis.webp" alt="Renell Crescini Tennis Academy" class="home__logo" />
+  <!-- ===== NAVBAR ===== -->
+  <nav class="landing-nav" [class.landing-nav--open]="menuOpen">
+    <div class="landing-nav__inner">
+      <a href="#hero" class="landing-nav__brand" (click)="closeMenu()">
+        <img src="/RCTennis.webp" alt="RC Tennis Academy" class="landing-nav__logo" />
+        <span class="landing-nav__brand-name">Renell Crescini Tennis Academy</span>
+      </a>
+
+      <button class="landing-nav__hamburger" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="landing-nav__links" [class.landing-nav__links--visible]="menuOpen">
+        <li><a href="#hero" (click)="closeMenu()">Home</a></li>
+        <li><a href="#services" (click)="closeMenu()">Services</a></li>
+        <li><a routerLink="/booking" (click)="closeMenu()" class="landing-nav__cta">Book Now</a></li>
+        <li><a href="#contact" (click)="closeMenu()">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero" class="landing-hero">
+    <div class="landing-hero__bg-orb landing-hero__bg-orb--1" aria-hidden="true"></div>
+    <div class="landing-hero__bg-orb landing-hero__bg-orb--2" aria-hidden="true"></div>
+
+    <div class="landing-hero__inner">
+      <div class="landing-hero__logo-wrap">
+        <img src="/RCTennis.webp" alt="Renell Crescini Tennis Academy" class="landing-hero__logo" />
       </div>
-
-      <h1 class="home__title">Book training sessions with a schedule that stays clear.</h1>
-      <p class="home__subtitle">
-        Plan sessions in minutes, see live availability, and submit training requests with
-        confidence.
+      <p class="landing-hero__tagline">Train. Play. Compete.</p>
+      <p class="landing-hero__sub">
+        Professional tennis coaching for all levels — from junior development to high-performance training.
+        Based in Angeles City.
       </p>
 
-      <div class="home__actions">
-        <a routerLink="/book" class="home__btn home__btn--primary">Book Training</a>
-        <a routerLink="/schedule" class="home__btn home__btn--secondary">View Schedule</a>
+      <div class="landing-hero__actions">
+        <a routerLink="/booking" class="landing-btn landing-btn--primary">Book a Session</a>
+        <a href="#services" class="landing-btn landing-btn--outline">Our Services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SERVICES ===== -->
+  <section id="services" class="landing-services">
+    <div class="landing-section-inner">
+      <header class="landing-section-header">
+        <p class="landing-section-eyebrow">What We Offer</p>
+        <h2 class="landing-section-title">Programs for Every Player</h2>
+        <p class="landing-section-desc">From first-time juniors to competitive adults — we have a program designed for your level and goals.</p>
+      </header>
+
+      <div class="landing-services__grid">
+        <article class="landing-service-card">
+          <div class="landing-service-card__icon" aria-hidden="true">🎾</div>
+          <h3>10 &amp; Under Tennis</h3>
+          <p>Fun, structured introduction to tennis for young beginners using age-appropriate equipment.</p>
+        </article>
+
+        <article class="landing-service-card">
+          <div class="landing-service-card__icon" aria-hidden="true">🏅</div>
+          <h3>Adult Tennis Development</h3>
+          <p>Build technique, consistency, and confidence with programs tailored for adult players of all skill levels.</p>
+        </article>
+
+        <article class="landing-service-card">
+          <div class="landing-service-card__icon" aria-hidden="true">⭐</div>
+          <h3>Complete Junior Tennis Development</h3>
+          <p>Comprehensive pathway for juniors — technique, tactics, fitness, and match play from foundational to advanced.</p>
+        </article>
+
+        <article class="landing-service-card">
+          <div class="landing-service-card__icon" aria-hidden="true">💪</div>
+          <h3>Over 40's Strength &amp; Conditioning</h3>
+          <p>Specially designed fitness and movement training to keep players over 40 strong, agile, and injury-free.</p>
+        </article>
+
+        <article class="landing-service-card">
+          <div class="landing-service-card__icon" aria-hidden="true">🏆</div>
+          <h3>High Performance Player Development</h3>
+          <p>Elite-level coaching for competitive players targeting tournaments and top-tier performance.</p>
+        </article>
+
+        <article class="landing-service-card">
+          <div class="landing-service-card__icon" aria-hidden="true">👥</div>
+          <h3>1-on-1 or Group Lessons</h3>
+          <p>Flexible private or group session formats to match your schedule, budget, and learning preference.</p>
+        </article>
+
+        <article class="landing-service-card">
+          <div class="landing-service-card__icon" aria-hidden="true">📅</div>
+          <h3>Tennis Clinics &amp; Events</h3>
+          <p>Intensive clinics and organized events to sharpen skills, meet fellow players, and compete in a fun environment.</p>
+        </article>
+
+        <article class="landing-service-card">
+          <div class="landing-service-card__icon" aria-hidden="true">📋</div>
+          <h3>Coaching Certification Programs</h3>
+          <p>Structured pathways for aspiring coaches to develop their own professional coaching credentials.</p>
+        </article>
       </div>
 
-      <div class="home__stats" aria-label="Quick highlights">
-        <article class="home__stat">
-          <p class="home__stat-value">24/7</p>
-          <p class="home__stat-label">Booking Request Access</p>
-        </article>
-        <article class="home__stat">
-          <p class="home__stat-value">Live</p>
-          <p class="home__stat-label">Availability Visibility</p>
-        </article>
-        <article class="home__stat">
-          <p class="home__stat-value">1 Step</p>
-          <p class="home__stat-label">Admin Confirmation Flow</p>
-        </article>
+      <div class="landing-services__cta">
+        <a routerLink="/booking" class="landing-btn landing-btn--primary">Book a Session</a>
       </div>
-    </header>
+    </div>
+  </section>
 
-    <section class="home__section" aria-label="Platform features">
-      <article class="home__feature card-surface">
-        <div class="home__feature-badge">01</div>
-        <h2>See training activity at a glance</h2>
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="landing-about">
+    <div class="landing-section-inner landing-section-inner--narrow">
+      <header class="landing-section-header">
+        <p class="landing-section-eyebrow">About the Academy</p>
+        <h2 class="landing-section-title">Built for Development, Performance &amp; Community</h2>
+      </header>
+
+      <div class="landing-about__body">
         <p>
-          Use the monthly schedule to instantly see approved training sessions and available time
-          slots.
+          The Renell Crescini Tennis Academy is dedicated to providing professional tennis coaching for players of all ages and skill levels.
+          Our programs are designed around three core principles: <strong>development</strong>, <strong>performance</strong>, and <strong>community</strong>.
         </p>
-      </article>
-
-      <article class="home__feature card-surface">
-        <div class="home__feature-badge">02</div>
-        <h2>Submit requests in seconds</h2>
         <p>
-          Select player details, choose your preferred date and time, and send your training request
-          without friction.
+          Whether you're stepping on a court for the first time or preparing for your next tournament, our coaches bring the structure, experience, and passion to help you reach your goals — all within a supportive, growth-focused environment in Angeles City.
         </p>
-      </article>
+      </div>
 
-      <article class="home__feature card-surface">
-        <div class="home__feature-badge">03</div>
-        <h2>Track approvals clearly</h2>
-        <p>
-          Every request goes through a transparent admin review flow, so final reservations stay
-          accurate.
-        </p>
-      </article>
-    </section>
-
-    <section class="home__section home__section--notice" aria-label="Payment information">
-      <article class="home__notice card-surface">
-        <div class="home__notice-icon" aria-hidden="true">&#9888;</div>
-        <div class="home__notice-body">
-          <h2 class="home__notice-title">Payment Required for Approval</h2>
-          <p class="home__notice-desc">
-            Booking requests will <strong>not be approved</strong> until payment has been made.
-            Please complete your payment and provide proof before your session is confirmed.
-          </p>
-          <div class="home__payment-methods">
-            <span class="home__payment-badge">Maya</span>
-            <span class="home__payment-badge">GCash</span>
-            <span class="home__payment-badge">Bank Transfer &mdash; Maybank</span>
-          </div>
+      <div class="landing-about__highlights">
+        <div class="landing-about__highlight">
+          <span class="landing-about__highlight-value">All Ages</span>
+          <span class="landing-about__highlight-label">Kids to Adults</span>
         </div>
-      </article>
-    </section>
+        <div class="landing-about__highlight">
+          <span class="landing-about__highlight-value">All Levels</span>
+          <span class="landing-about__highlight-label">Beginner to Elite</span>
+        </div>
+        <div class="landing-about__highlight">
+          <span class="landing-about__highlight-value">8 Programs</span>
+          <span class="landing-about__highlight-label">Structured Pathways</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <footer class="home__footer">
-      <button class="home__admin-btn" (click)="goToAdmin()" aria-label="Go to Admin">
-        <span class="home__admin-btn-icon" aria-hidden="true">&#128274;</span>
-        <span class="home__admin-btn-text">
-          <strong>Admin Login</strong>
-          <small>Manage bookings and approvals</small>
-        </span>
-      </button>
-    </footer>
-  </div>
-</section>
+  <!-- ===== CERTIFICATIONS ===== -->
+  <section id="certifications" class="landing-certs">
+    <div class="landing-section-inner">
+      <header class="landing-section-header">
+        <p class="landing-section-eyebrow">Credentials</p>
+        <h2 class="landing-section-title">Certified By</h2>
+      </header>
+
+      <div class="landing-certs__grid">
+        <div class="landing-certs__item">
+          <img src="/cert-mtmca.jpg" alt="Modern Tennis Methodology Coaches Association" />
+        </div>
+        <div class="landing-certs__item">
+          <img src="/cert-rpt.png" alt="RPT — Registry of Tennis Professionals" />
+        </div>
+        <div class="landing-certs__item">
+          <img src="/cert-rtp.png" alt="Registry of Tennis Professionals" />
+        </div>
+        <div class="landing-certs__item">
+          <img src="/cert-ici.jpg" alt="International Coaches Institute" />
+        </div>
+        <div class="landing-certs__item">
+          <img src="/cert-ica.png" alt="ICA — International Coaches Association" />
+        </div>
+        <div class="landing-certs__item">
+          <img src="/cert-tennis-international.png" alt="Tennis International" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact" class="landing-contact">
+    <div class="landing-section-inner landing-section-inner--narrow">
+      <header class="landing-section-header">
+        <p class="landing-section-eyebrow">Get in Touch</p>
+        <h2 class="landing-section-title">Ready to Start?</h2>
+        <p class="landing-section-desc">Reach out to us or book directly through the system.</p>
+      </header>
+
+      <div class="landing-contact__cards">
+        <div class="landing-contact__card">
+          <div class="landing-contact__card-icon" aria-hidden="true">📍</div>
+          <h3>Location</h3>
+          <p>Angeles City, Pampanga<br>Philippines</p>
+        </div>
+
+        <div class="landing-contact__card">
+          <div class="landing-contact__card-icon" aria-hidden="true">📞</div>
+          <h3>Phone</h3>
+          <a href="tel:+639338658848" class="landing-contact__link">+63 933 865 8848</a>
+        </div>
+
+        <div class="landing-contact__card">
+          <a href="https://www.facebook.com/profile.php?id=61569677832500" target="_blank" rel="noopener noreferrer" class="landing-contact__fb-link" aria-label="Follow us on Facebook">
+            <svg class="landing-contact__fb-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
+            </svg>
+            <span class="landing-contact__fb-label">Facebook</span>
+          </a>
+        </div>
+
+        <div class="landing-contact__card landing-contact__card--ig">
+          <a href="https://www.instagram.com/mytenniscoachrenellcrescini" target="_blank" rel="noopener noreferrer" class="landing-contact__ig-link">
+            <img src="/RCTennisIG.jpg" alt="Instagram QR Code — @mytenniscoachrenellcrescini" class="landing-contact__ig-qr" />
+          </a>
+        </div>
+      </div>
+
+      <div class="landing-contact__action">
+        <a routerLink="/booking" class="landing-btn landing-btn--primary">Book a Session Now</a>
+        <a routerLink="/schedule" class="landing-btn landing-btn--outline">View Schedule</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="landing-footer">
+    <p class="landing-footer__copy">&copy; 2026 Renell Crescini Tennis Academy &mdash; Angeles City</p>
+    <button class="landing-footer__admin-btn" (click)="goToAdmin()" aria-label="Go to Admin">
+      <span class="landing-footer__admin-icon" aria-hidden="true">&#128274;</span>
+      <span class="landing-footer__admin-text">
+        <strong>Admin Login</strong>
+        <small>Manage bookings and approvals</small>
+      </span>
+    </button>
+  </footer>
+
+</div>
