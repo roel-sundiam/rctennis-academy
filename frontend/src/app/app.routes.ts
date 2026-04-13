@@ -40,5 +40,17 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/admin/analytics/analytics.component').then(m => m.AnalyticsComponent)
   },
+  {
+    path: 'admin/manage-admins',
+    canActivate: [authGuard, superAdminGuard],
+    loadComponent: () =>
+      import('./features/admin/manage-admins/manage-admins.component').then(m => m.ManageAdminsComponent)
+  },
+  {
+    path: 'admin/manage-tournaments',
+    canActivate: [authGuard, superAdminGuard],
+    loadComponent: () =>
+      import('./features/admin/manage-tournaments/manage-tournaments.component').then(m => m.ManageTournamentsComponent)
+  },
   { path: '**', redirectTo: '' }
 ];

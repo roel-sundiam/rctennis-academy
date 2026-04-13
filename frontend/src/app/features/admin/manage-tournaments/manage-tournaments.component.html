@@ -1,0 +1,245 @@
+<section class="ma-page">
+  <header class="ma-header">
+    <div class="ma-header__brand">
+      <a routerLink="/"><img src="/RCTennis.webp" alt="RC Tennis" class="ma-header__logo" /></a>
+    </div>
+    <nav class="ma-header__actions">
+      <a routerLink="/admin" class="ma-header__btn ma-header__btn--ghost">&#8592; Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="ma-main mt-wide">
+
+    @if (errorMessage) {
+      <div class="alert alert--error">{{ errorMessage }}</div>
+    }
+    @if (successMessage) {
+      <div class="alert alert--success">{{ successMessage }}</div>
+    }
+
+    <!-- ── Create Tournament ── -->
+    <div class="ma-panel">
+      <div class="ma-title-row">
+        <h1>Manage Tournaments</h1>
+        @if (username) {
+          <span class="ma-user-badge">&#128274; {{ username }}</span>
+        }
+      </div>
+
+      <div class="ma-section">
+        <h2>Create Tournament</h2>
+        <form class="ma-form" (ngSubmit)="createTournament()">
+          <div class="ma-form__row">
+            <div class="ma-form__field" style="flex: 2 1 200px">
+              <label for="tName">Tournament Name</label>
+              <input id="tName" type="text" [(ngModel)]="newTournament.name" name="tName" placeholder="e.g. RC Open 2026" autocomplete="off" />
+            </div>
+            <div class="ma-form__field">
+              <label for="tStart">Start Date</label>
+              <input id="tStart" type="date" [(ngModel)]="newTournament.startDate" name="tStart" />
+            </div>
+            <div class="ma-form__field">
+              <label for="tEnd">End Date</label>
+              <input id="tEnd" type="date" [(ngModel)]="newTournament.endDate" name="tEnd" />
+            </div>
+            <div class="ma-form__field">
+              <label for="tLocation">Location</label>
+              <input id="tLocation" type="text" [(ngModel)]="newTournament.location" name="tLocation" placeholder="e.g. Court 1, Angeles City" autocomplete="off" />
+            </div>
+            <div class="ma-form__field ma-form__field--role">
+              <label for="tStatus">Status</label>
+              <select id="tStatus" [(ngModel)]="newTournament.status" name="tStatus">
+                <option value="upcoming">Upcoming</option>
+                <option value="ongoing">Ongoing</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+
+          @if (tournamentFormError) {
+            <p class="ma-form__error">{{ tournamentFormError }}</p>
+          }
+          <button type="submit" class="ma-btn ma-btn--primary" [disabled]="submittingTournament">
+            @if (submittingTournament) { Creating… } @else { Create Tournament }
+          </button>
+        </form>
+      </div>
+
+      <!-- ── Tournament List ── -->
+      <div class="ma-section">
+        <h2>All Tournaments</h2>
+
+        @if (loading) {
+          <div class="ma-loading"><div class="spinner"></div> Loading…</div>
+        }
+
+        @if (!loading && tournaments.length === 0) {
+          <p class="text-muted">No tournaments yet. Create one above.</p>
+        }
+
+        @if (!loading && tournaments.length > 0) {
+          <table class="ma-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Dates</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Matches</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (t of tournaments; track t._id) {
+                <tr [class.mt-row--active]="activeTournament?._id === t._id">
+                  <td class="ma-table__username">{{ t.name }}</td>
+                  <td>{{ t.startDate }} – {{ t.endDate }}</td>
+                  <td>{{ t.location }}</td>
+                  <td>
+                    <span class="mt-status mt-status--{{ t.status }}">{{ t.status }}</span>
+                  </td>
+                  <td>{{ t.matches.length }}</td>
+                  <td class="ma-table__actions">
+                    <button class="ma-btn ma-btn--ghost ma-btn--sm" (click)="selectTournament(t)">
+                      Manage Matches
+                    </button>
+                    @if (deletingTournamentId === t._id) {
+                      <span class="mt-confirm-inline">
+                        Sure?
+                        <button class="ma-btn ma-btn--danger ma-btn--sm" (click)="confirmDeleteTournament(t._id)">Yes, delete</button>
+                        <button class="ma-btn ma-btn--ghost ma-btn--sm" (click)="cancelDeleteTournament()">Cancel</button>
+                      </span>
+                    } @else {
+                      <button class="ma-btn ma-btn--danger-ghost ma-btn--sm" (click)="startDeleteTournament(t._id)">Delete</button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+    </div>
+
+    <!-- ── Match Management Panel ── -->
+    @if (activeTournament) {
+      <div class="ma-panel mt-matches-panel">
+        <div class="ma-title-row">
+          <h1>🏆 {{ activeTournament.name }} — Matches</h1>
+          <button class="ma-btn ma-btn--ghost ma-btn--sm" (click)="activeTournament = null">Close</button>
+        </div>
+
+        <!-- Add Match Form -->
+        <div class="ma-section">
+          <h2>Add Match</h2>
+          <form class="ma-form" (ngSubmit)="addMatch()">
+            <div class="ma-form__row">
+              <div class="ma-form__field">
+                <label for="mDate">Date</label>
+                <input id="mDate" type="date" [(ngModel)]="newMatch.date" name="mDate" />
+              </div>
+              <div class="ma-form__field">
+                <label for="mTime">Time</label>
+                <input id="mTime" type="time" [(ngModel)]="newMatch.time" name="mTime" />
+              </div>
+              <div class="ma-form__field" style="flex: 2 1 160px">
+                <label for="mP1">Player 1</label>
+                <input id="mP1" type="text" [(ngModel)]="newMatch.player1" name="mP1" placeholder="Name" autocomplete="off" />
+              </div>
+              <div class="ma-form__field" style="flex: 2 1 160px">
+                <label for="mP2">Player 2</label>
+                <input id="mP2" type="text" [(ngModel)]="newMatch.player2" name="mP2" placeholder="Name" autocomplete="off" />
+              </div>
+              <div class="ma-form__field">
+                <label for="mCourt">Court</label>
+                <input id="mCourt" type="text" [(ngModel)]="newMatch.court" name="mCourt" placeholder="Court 1" autocomplete="off" />
+              </div>
+              <div class="ma-form__field">
+                <label for="mResult">Result <span class="mt-optional">(optional)</span></label>
+                <input id="mResult" type="text" [(ngModel)]="newMatch.result" name="mResult" placeholder="e.g. 6-3 7-5" autocomplete="off" />
+              </div>
+            </div>
+
+            @if (matchFormError) {
+              <p class="ma-form__error">{{ matchFormError }}</p>
+            }
+            <button type="submit" class="ma-btn ma-btn--primary" [disabled]="submittingMatch">
+              @if (submittingMatch) { Adding… } @else { Add Match }
+            </button>
+          </form>
+        </div>
+
+        <!-- Match List -->
+        <div class="ma-section">
+          <h2>Schedule ({{ activeTournament.matches.length }} matches)</h2>
+
+          @if (activeTournament.matches.length === 0) {
+            <p class="text-muted">No matches yet. Add one above.</p>
+          }
+
+          @if (activeTournament.matches.length > 0) {
+            <div class="mt-match-table-wrap">
+              <table class="ma-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Player 1</th>
+                    <th></th>
+                    <th>Player 2</th>
+                    <th>Court</th>
+                    <th>Result</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (m of activeTournament.matches; track m._id) {
+                    @if (editingMatch?._id === m._id) {
+                      <tr class="mt-edit-row">
+                        <td><input type="date" [(ngModel)]="editMatch.date" [name]="'ed_'+m._id" class="mt-inline-input" /></td>
+                        <td><input type="time" [(ngModel)]="editMatch.time" [name]="'et_'+m._id" class="mt-inline-input" /></td>
+                        <td><input type="text" [(ngModel)]="editMatch.player1" [name]="'ep1_'+m._id" class="mt-inline-input" /></td>
+                        <td class="mt-vs">vs</td>
+                        <td><input type="text" [(ngModel)]="editMatch.player2" [name]="'ep2_'+m._id" class="mt-inline-input" /></td>
+                        <td><input type="text" [(ngModel)]="editMatch.court" [name]="'ec_'+m._id" class="mt-inline-input" /></td>
+                        <td><input type="text" [(ngModel)]="editMatch.result" [name]="'er_'+m._id" class="mt-inline-input" placeholder="optional" /></td>
+                        <td class="ma-table__actions">
+                          <button class="ma-btn ma-btn--primary ma-btn--sm" (click)="saveEditMatch()">Save</button>
+                          <button class="ma-btn ma-btn--ghost ma-btn--sm" (click)="cancelEditMatch()">Cancel</button>
+                        </td>
+                      </tr>
+                    } @else {
+                      <tr>
+                        <td>{{ m.date }}</td>
+                        <td class="mt-time">{{ formatTime(m.time) }}</td>
+                        <td class="mt-player">{{ m.player1 }}</td>
+                        <td class="mt-vs">vs</td>
+                        <td class="mt-player">{{ m.player2 }}</td>
+                        <td>{{ m.court }}</td>
+                        <td class="mt-result">{{ m.result || '–' }}</td>
+                        <td class="ma-table__actions">
+                          @if (deletingMatchId === m._id) {
+                            <span class="mt-confirm-inline">
+                              Sure?
+                              <button class="ma-btn ma-btn--danger ma-btn--sm" (click)="confirmDeleteMatch(m._id)">Yes</button>
+                              <button class="ma-btn ma-btn--ghost ma-btn--sm" (click)="cancelDeleteMatch()">No</button>
+                            </span>
+                          } @else {
+                            <button class="ma-btn ma-btn--ghost ma-btn--sm" (click)="startEditMatch(m)">Edit</button>
+                            <button class="ma-btn ma-btn--danger-ghost ma-btn--sm" (click)="startDeleteMatch(m._id)">Remove</button>
+                          }
+                        </td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+  </main>
+</section>

@@ -17,6 +17,7 @@
       <ul class="landing-nav__links" [class.landing-nav__links--visible]="menuOpen">
         <li><a href="#hero" (click)="closeMenu()">Home</a></li>
         <li><a href="#services" (click)="closeMenu()">Services</a></li>
+        <li><a href="#tournaments" (click)="closeMenu()">Tournaments</a></li>
         <li><a routerLink="/booking" (click)="closeMenu()" class="landing-nav__cta">Book Now</a></li>
         <li><a href="#contact" (click)="closeMenu()">Contact</a></li>
       </ul>
@@ -107,6 +108,68 @@
       <div class="landing-services__cta">
         <a routerLink="/booking" class="landing-btn landing-btn--primary">Book a Session</a>
       </div>
+    </div>
+  </section>
+
+  <!-- ===== UPCOMING TOURNAMENTS ===== -->
+  <section id="tournaments" class="landing-tournaments">
+    <div class="landing-section-inner">
+      <header class="landing-section-header">
+        <p class="landing-section-eyebrow">Compete &amp; Watch</p>
+        <h2 class="landing-section-title">Upcoming Tournaments</h2>
+      </header>
+
+      @if (tournamentsLoading) {
+        <div class="landing-tournaments__state">
+          <span class="landing-tournaments__spinner" aria-hidden="true"></span>
+          Loading schedule…
+        </div>
+      }
+
+      @if (!tournamentsLoading && tournaments.length === 0) {
+        <div class="landing-tournaments__state">
+          <span aria-hidden="true">🏆</span>
+          <p>No upcoming tournaments at this time. Check back soon.</p>
+        </div>
+      }
+
+      @for (t of tournaments; track t._id) {
+        <div class="landing-tournament">
+          <div class="landing-tournament__header">
+            <h3 class="landing-tournament__name">{{ t.name }}</h3>
+            <span class="landing-tournament__meta">📍 {{ t.location }} &nbsp;|&nbsp; 📅 {{ t.startDate }} – {{ t.endDate }}</span>
+          </div>
+
+          @if (t.matches && t.matches.length > 0) {
+            <div class="landing-tournament__table-wrap">
+              <table class="landing-tournament__table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Match</th>
+                    <th>Court</th>
+                    <th>Result</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (m of t.matches; track m._id) {
+                    <tr>
+                      <td>{{ m.date }}</td>
+                      <td class="landing-tournament__time">{{ formatTime(m.time) }}</td>
+                      <td class="landing-tournament__players">{{ m.player1 }} <span class="landing-tournament__vs">vs</span> {{ m.player2 }}</td>
+                      <td>{{ m.court }}</td>
+                      <td class="landing-tournament__result">{{ m.result || '–' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <p class="landing-tournament__no-matches">Schedule not yet posted.</p>
+          }
+        </div>
+      }
     </div>
   </section>
 

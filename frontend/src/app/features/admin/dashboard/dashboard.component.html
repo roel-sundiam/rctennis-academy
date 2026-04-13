@@ -114,16 +114,29 @@
             <span class="admin-card__label">Analytics</span>
           </a>
         }
+        @if (auth.isSuperAdmin()) {
+          <a
+            routerLink="/admin/manage-admins"
+            class="admin-card admin-card--link admin-card--manage-admins"
+          >
+            <span class="admin-card__icon">👤</span>
+            <span class="admin-card__label">Manage Admins</span>
+          </a>
+        }
         <button class="admin-card admin-card--payments" disabled>
           <span class="admin-card__icon">💳</span>
           <span class="admin-card__label">Payments</span>
           <span class="admin-card__soon">Coming Soon</span>
         </button>
-        <button class="admin-card admin-card--tournament" disabled>
-          <span class="admin-card__icon">🏆</span>
-          <span class="admin-card__label">Tournament</span>
-          <span class="admin-card__soon">Coming Soon</span>
-        </button>
+        @if (auth.isSuperAdmin()) {
+          <a
+            routerLink="/admin/manage-tournaments"
+            class="admin-card admin-card--link admin-card--tournament"
+          >
+            <span class="admin-card__icon">🏆</span>
+            <span class="admin-card__label">Tournament</span>
+          </a>
+        }
       </nav>
 
       <section class="admin-panel__content">

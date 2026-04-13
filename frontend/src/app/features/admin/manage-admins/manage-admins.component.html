@@ -1,0 +1,153 @@
+<section class="ma-page">
+  <header class="ma-header">
+    <div class="ma-header__brand">
+      <a routerLink="/"><img src="/RCTennis.webp" alt="RC Tennis" class="ma-header__logo" /></a>
+    </div>
+    <nav class="ma-header__actions">
+      <a routerLink="/admin/analytics" class="ma-header__btn ma-header__btn--ghost">&#8592; Analytics</a>
+      <a routerLink="/admin" class="ma-header__btn ma-header__btn--ghost">Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="ma-main">
+    <div class="ma-panel">
+
+      <div class="ma-title-row">
+        <h1>Manage Admin Accounts</h1>
+        @if (username) {
+          <span class="ma-user-badge">&#128274; {{ username }}</span>
+        }
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert--error">{{ errorMessage }}</div>
+      }
+      @if (successMessage) {
+        <div class="alert alert--success">{{ successMessage }}</div>
+      }
+
+      <!-- Add Admin Form -->
+      <div class="ma-section">
+        <h2>Add New Admin</h2>
+        <form class="ma-form" (ngSubmit)="addAdmin()" #addForm="ngForm">
+          <div class="ma-form__row">
+            <div class="ma-form__field">
+              <label for="newUsername">Username</label>
+              <input
+                id="newUsername"
+                type="text"
+                [(ngModel)]="newUsername"
+                name="newUsername"
+                placeholder="e.g. JuanDelacruz"
+                autocomplete="off"
+              />
+            </div>
+            <div class="ma-form__field">
+              <label for="newPassword">Password</label>
+              <input
+                id="newPassword"
+                type="password"
+                [(ngModel)]="newPassword"
+                name="newPassword"
+                placeholder="Min. 8 characters"
+                autocomplete="new-password"
+              />
+            </div>
+            <div class="ma-form__field ma-form__field--role">
+              <label for="newRole">Role</label>
+              <select id="newRole" [(ngModel)]="newRole" name="newRole">
+                <option value="admin">Admin</option>
+                <option value="superadmin">Super Admin</option>
+              </select>
+            </div>
+          </div>
+
+          @if (formError) {
+            <p class="ma-form__error">{{ formError }}</p>
+          }
+
+          <button type="submit" class="ma-btn ma-btn--primary" [disabled]="submitting">
+            @if (submitting) { Adding... } @else { Add Admin }
+          </button>
+        </form>
+      </div>
+
+      <!-- Current Accounts -->
+      <div class="ma-section">
+        <h2>Current Accounts</h2>
+
+        @if (loading) {
+          <div class="ma-loading">
+            <div class="spinner"></div>
+            Loading accounts...
+          </div>
+        }
+
+        @if (!loading && admins.length === 0) {
+          <p class="text-muted">No accounts found.</p>
+        }
+
+        @if (!loading && admins.length > 0) {
+          <table class="ma-table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Source</th>
+                <th>Created By</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (admin of admins; track admin.username) {
+                <tr>
+                  <td class="ma-table__username">{{ admin.username }}</td>
+                  <td>
+                    <span class="ma-badge" [class.ma-badge--super]="admin.role === 'superadmin'">
+                      {{ admin.role === 'superadmin' ? 'Super Admin' : 'Admin' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="ma-source" [class.ma-source--env]="admin.source === 'env'">
+                      {{ admin.source === 'env' ? 'Built-in' : 'Added' }}
+                    </span>
+                  </td>
+                  <td class="ma-table__created-by">
+                    {{ admin.createdBy || '—' }}
+                  </td>
+                  <td class="ma-table__actions">
+                    @if (admin.source === 'db') {
+                      @if (deletingUsername === admin.username) {
+                        <div class="ma-confirm">
+                          <span class="ma-confirm__label">Type username to confirm:</span>
+                          <input
+                            type="text"
+                            class="ma-confirm__input"
+                            [(ngModel)]="confirmDeleteUsername"
+                            [name]="'confirm_' + admin.username"
+                            placeholder="{{ admin.username }}"
+                          />
+                          <button
+                            class="ma-btn ma-btn--danger ma-btn--sm"
+                            [disabled]="confirmDeleteUsername !== admin.username"
+                            (click)="confirmDelete()"
+                          >Delete</button>
+                          <button class="ma-btn ma-btn--ghost ma-btn--sm" (click)="cancelDelete()">Cancel</button>
+                        </div>
+                      } @else {
+                        <button class="ma-btn ma-btn--danger-ghost ma-btn--sm" (click)="startDelete(admin.username)">
+                          Remove
+                        </button>
+                      }
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+
+    </div>
+  </main>
+</section>

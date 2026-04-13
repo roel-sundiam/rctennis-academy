@@ -816,3 +816,134 @@
     transition: none;
   }
 }
+
+// ============================================================
+// UPCOMING TOURNAMENTS
+// ============================================================
+.landing-tournaments {
+  background: var(--c-bg);
+  border-top: 1px solid var(--c-border);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.landing-tournaments__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1rem;
+  color: var(--c-muted);
+  font-size: 0.95rem;
+  text-align: center;
+  p { margin: 0; }
+}
+
+.landing-tournaments__spinner {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  border: 3px solid var(--c-border);
+  border-top-color: var(--c-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.landing-tournament {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  box-shadow: var(--c-shadow-sm);
+  margin-bottom: 1.25rem;
+
+  &:last-child { margin-bottom: 0; }
+
+  &__header {
+    margin-bottom: 1rem;
+  }
+
+  &__name {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-weight: 700;
+    color: var(--c-text);
+    margin: 0 0 0.25rem;
+  }
+
+  &__meta {
+    font-size: 0.85rem;
+    color: var(--c-muted);
+  }
+
+  &__table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    min-width: 480px;
+
+    th {
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--c-muted);
+      padding: 0.5rem 0.75rem;
+      border-bottom: 2px solid var(--c-border);
+    }
+
+    td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--c-border);
+      color: var(--c-text);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover td {
+      background: var(--c-primary-light);
+    }
+  }
+
+  &__time {
+    white-space: nowrap;
+    font-weight: 600;
+    color: var(--c-primary);
+  }
+
+  &__players {
+    font-weight: 600;
+  }
+
+  &__vs {
+    display: inline-block;
+    margin: 0 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__result {
+    font-weight: 600;
+    color: var(--c-primary-dark);
+  }
+
+  &__no-matches {
+    font-size: 0.88rem;
+    color: var(--c-muted);
+    margin: 0;
+    font-style: italic;
+  }
+}

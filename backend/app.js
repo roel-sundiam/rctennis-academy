@@ -5,6 +5,7 @@ const playerRoutes = require('./routes/player.routes');
 const reservationRoutes = require('./routes/reservation.routes');
 const blockedSlotRoutes = require('./routes/blocked-slot.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
+const tournamentRoutes = require('./routes/tournament.routes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -17,6 +18,7 @@ app.use('/players', playerRoutes);
 app.use('/reservations', reservationRoutes);
 app.use('/blocked-slots', blockedSlotRoutes);
 app.use('/analytics', analyticsRoutes);
+app.use('/tournaments', tournamentRoutes);
 
 app.use(errorHandler);
 
