@@ -23,10 +23,12 @@ export class ReservationService {
     return this.http.post<Reservation>(this.apiUrl, data);
   }
 
-  getReservations(status?: ReservationStatus, paymentMade?: boolean): Observable<Reservation[]> {
+  getReservations(status?: ReservationStatus, paymentMade?: boolean, from?: string, to?: string): Observable<Reservation[]> {
     let params = new HttpParams();
     if (status) params = params.set('status', status);
     if (paymentMade !== undefined) params = params.set('paymentMade', String(paymentMade));
+    if (from) params = params.set('from', from);
+    if (to)   params = params.set('to', to);
     return this.http.get<Reservation[]>(this.apiUrl, { params });
   }
 
@@ -41,5 +43,13 @@ export class ReservationService {
   getPublicSchedule(month: string): Observable<Reservation[]> {
     const params = new HttpParams().set('month', month);
     return this.http.get<Reservation[]>(`${this.apiUrl}/schedule`, { params });
+  }
+
+  updateReservation(id: string, playerName: string): Observable<Reservation> {
+    return this.http.patch<Reservation>(`${this.apiUrl}/${id}`, { playerName });
+  }
+
+  deleteReservation(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

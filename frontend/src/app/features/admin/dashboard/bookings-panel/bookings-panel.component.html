@@ -1,3 +1,19 @@
+<!-- Date filter -->
+<div class="date-filter">
+  <label class="date-filter__group">
+    <span class="date-filter__label">From</span>
+    <input type="date" class="date-filter__input" [(ngModel)]="filterFrom" />
+  </label>
+  <label class="date-filter__group">
+    <span class="date-filter__label">To</span>
+    <input type="date" class="date-filter__input" [(ngModel)]="filterTo" />
+  </label>
+  <button class="date-filter__btn" (click)="load()">Filter</button>
+  @if (filterFrom || filterTo) {
+    <button class="date-filter__clear" (click)="filterFrom = ''; filterTo = ''; load()">Clear</button>
+  }
+</div>
+
 <!-- Status filter tabs -->
 <div class="bookings-filter">
   <button class="bookings-filter__tab bookings-filter__tab--pending"
@@ -61,12 +77,17 @@
           }
           @if (bookingStatus === 'approved') {
             <th>Approved By</th>
+            <th></th>
+          }
+          @if (bookingStatus === 'rejected') {
+            <th></th>
           }
           @if (bookingStatus === 'paid') {
             <th>Method</th>
             <th>Amount</th>
             <th>Reference</th>
             <th>Status</th>
+            <th></th>
           }
         </tr>
       </thead>
@@ -117,12 +138,38 @@
                     </svg>
                     Reject
                   </button>
+                  <button class="action-btn action-btn--edit"
+                    (click)="startEdit(r)"
+                    title="Edit player name">
+                    ✏️
+                  </button>
+                  <button class="action-btn action-btn--delete"
+                    [disabled]="deleteLoading[r._id]"
+                    (click)="deleteReservation(r)"
+                    title="Delete reservation">
+                    &#10005;
+                  </button>
                 </div>
               </td>
             }
 
             @if (bookingStatus === 'approved') {
               <td class="col-approvedby">{{ r.approvedBy ?? '—' }}</td>
+              <td class="col-row-actions">
+                <div class="action-group">
+                  <button class="action-btn action-btn--edit" (click)="startEdit(r)" title="Edit player name">✏️</button>
+                  <button class="action-btn action-btn--delete" [disabled]="deleteLoading[r._id]" (click)="deleteReservation(r)" title="Delete reservation">&#10005;</button>
+                </div>
+              </td>
+            }
+
+            @if (bookingStatus === 'rejected') {
+              <td class="col-row-actions">
+                <div class="action-group">
+                  <button class="action-btn action-btn--edit" (click)="startEdit(r)" title="Edit player name">✏️</button>
+                  <button class="action-btn action-btn--delete" [disabled]="deleteLoading[r._id]" (click)="deleteReservation(r)" title="Delete reservation">&#10005;</button>
+                </div>
+              </td>
             }
 
             @if (bookingStatus === 'paid') {
@@ -130,8 +177,36 @@
               <td class="col-amount">{{ r.paymentAmount ?? '—' }}</td>
               <td class="col-ref">{{ r.paymentReference || '—' }}</td>
               <td class="col-status"><span class="badge badge--{{ r.status }}">{{ r.status }}</span></td>
+              <td class="col-row-actions">
+                <div class="action-group">
+                  <button class="action-btn action-btn--edit" (click)="startEdit(r)" title="Edit player name">✏️</button>
+                  <button class="action-btn action-btn--delete" [disabled]="deleteLoading[r._id]" (click)="deleteReservation(r)" title="Delete reservation">&#10005;</button>
+                </div>
+              </td>
             }
           </tr>
+
+          <!-- Inline edit row -->
+          @if (editingId === r._id) {
+            <tr class="edit-row">
+              <td colspan="10">
+                <div class="inline-edit">
+                  <span class="inline-edit__label">Change player name:</span>
+                  <select class="inline-edit__select" [(ngModel)]="editPlayerName">
+                    <option value="">Select player</option>
+                    @for (p of players; track p._id) {
+                      <option [value]="p.name">{{ p.name }}</option>
+                    }
+                  </select>
+                  <button class="action-btn action-btn--approve" [disabled]="editLoading" (click)="submitEdit()">
+                    @if (editLoading) { Saving... } @else { Save }
+                  </button>
+                  <button class="action-btn action-btn--reject" [disabled]="editLoading" (click)="cancelEdit()">Cancel</button>
+                  @if (editError) { <span class="form-error">{{ editError }}</span> }
+                </div>
+              </td>
+            </tr>
+          }
         }
       </tbody>
     </table>

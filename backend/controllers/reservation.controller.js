@@ -71,10 +71,15 @@ async function createReservation(req, res, next) {
 
 async function getReservations(req, res, next) {
   try {
-    const { status, paymentMade } = req.query;
+    const { status, paymentMade, from, to } = req.query;
     const filter = {};
     if (status) filter.status = status;
     if (paymentMade !== undefined) filter.paymentMade = paymentMade === 'true';
+    if (from || to) {
+      filter.ReserveDate = {};
+      if (from) filter.ReserveDate.$gte = from;
+      if (to)   filter.ReserveDate.$lte = to;
+    }
     const reservations = await Reservation.find(filter)
       .sort({ ReserveDate: 1, StartTime: 1 });
     res.json(reservations);
@@ -145,4 +150,28 @@ async function getPublicSchedule(req, res, next) {
   }
 }
 
-module.exports = { createReservation, getReservations, approveReservation, rejectReservation, getPublicSchedule };
+async function updateReservation(req, res, next) {
+  try {
+    const { playerName } = req.body;
+    if (!playerName) return res.status(400).json({ message: 'playerName is required.' });
+    const updated = await Reservation.findByIdAndUpdate(
+      req.params.id, { playerName }, { new: true }
+    );
+    if (!updated) return res.status(404).json({ message: 'Reservation not found.' });
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function deleteReservation(req, res, next) {
+  try {
+    const deleted = await Reservation.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ message: 'Reservation not found.' });
+    res.json({ message: 'Deleted.' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { createReservation, getReservations, approveReservation, rejectReservation, getPublicSchedule, updateReservation, deleteReservation };

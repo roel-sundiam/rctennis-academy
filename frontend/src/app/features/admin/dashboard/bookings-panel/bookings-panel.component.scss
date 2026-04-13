@@ -1,3 +1,66 @@
+// ── Date filter ───────────────────────────────────────────────────
+.date-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  background: #f8faff;
+  border-bottom: 1px solid #e2e6ee;
+
+  &__group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #5f7090;
+    white-space: nowrap;
+  }
+
+  &__input {
+    padding: 5px 8px;
+    border: 1px solid #d1d9e8;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: #1e3a6e;
+    background: #fff;
+
+    &:focus { outline: 2px solid #2563eb; outline-offset: 1px; }
+  }
+
+  &__btn {
+    padding: 5px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 140ms ease;
+
+    &:hover { background: #1d4ed8; }
+  }
+
+  &__clear {
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: none;
+    color: #6b7280;
+    border: 1px solid #d1d9e8;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 140ms ease, color 140ms ease;
+
+    &:hover { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+  }
+}
+
 // ── Status filter tabs ────────────────────────────────────────────
 .bookings-filter {
   display: flex;
@@ -178,4 +241,74 @@
       box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
     }
   }
+
+  &--edit {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+    padding: 5px 9px;
+
+    &:hover:not(:disabled) {
+      background: #1d4ed8;
+      color: #fff;
+      border-color: #1d4ed8;
+      box-shadow: 0 4px 10px rgba(29, 78, 216, 0.25);
+    }
+  }
+
+  &--delete {
+    background: #fff1f2;
+    color: #9f1239;
+    border-color: #fecdd3;
+    padding: 5px 9px;
+    font-size: 0.75rem;
+
+    &:hover:not(:disabled) {
+      background: #9f1239;
+      color: #fff;
+      border-color: #9f1239;
+      box-shadow: 0 4px 10px rgba(159, 18, 57, 0.25);
+    }
+  }
+}
+
+.col-row-actions { white-space: nowrap; }
+
+// ── Inline edit row ───────────────────────────────────────────────
+.edit-row {
+  background: #f0f7ff !important;
+  border-bottom: 2px solid #bfdbfe !important;
+
+  td { padding: 10px 14px; }
+}
+
+.inline-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  &__label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1e3a6e;
+  }
+
+  &__select {
+    padding: 5px 10px;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: #1e3a6e;
+    background: #fff;
+    min-width: 180px;
+
+    &:focus { outline: 2px solid #2563eb; outline-offset: 1px; }
+  }
+}
+
+.form-error {
+  font-size: 0.78rem;
+  color: #b91c1c;
+  font-weight: 500;
 }
