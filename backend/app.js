@@ -6,6 +6,7 @@ const reservationRoutes = require('./routes/reservation.routes');
 const blockedSlotRoutes = require('./routes/blocked-slot.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const tournamentRoutes = require('./routes/tournament.routes');
+const paymentReceiptRoutes = require('./routes/payment-receipt.routes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -19,6 +20,7 @@ app.use('/reservations', reservationRoutes);
 app.use('/blocked-slots', blockedSlotRoutes);
 app.use('/analytics', analyticsRoutes);
 app.use('/tournaments', tournamentRoutes);
+app.use('/payment-receipts', paymentReceiptRoutes);
 
 app.use(errorHandler);
 

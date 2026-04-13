@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlayerService } from '../../../../core/services/player.service';
 import { Player } from '../../../../models/player.model';
+import { ModalService } from '../../../../core/services/modal.service';
 
 @Component({
   selector: 'app-players-panel',
@@ -27,7 +28,11 @@ export class PlayersPanelComponent implements OnInit {
 
   deleteLoading: Record<string, boolean> = {};
 
-  constructor(private playerService: PlayerService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private playerService: PlayerService,
+    private modalService: ModalService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.load();
@@ -112,8 +117,14 @@ export class PlayersPanelComponent implements OnInit {
     });
   }
 
-  deletePlayer(id: string): void {
-    if (!confirm('Deactivate this player? They will no longer appear in the booking form.')) return;
+  async deletePlayer(id: string): Promise<void> {
+    const confirmed = await this.modalService.open({
+      type: 'danger',
+      title: 'Deactivate Player',
+      message: 'This player will no longer appear in the booking form. You can reactivate them later.',
+      confirmLabel: 'Deactivate',
+    });
+    if (!confirmed) return;
     this.deleteLoading[id] = true;
     this.playerService.deletePlayer(id).subscribe({
       next: () => {

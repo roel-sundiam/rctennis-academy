@@ -123,10 +123,13 @@
             <span class="admin-card__label">Manage Admins</span>
           </a>
         }
-        <button class="admin-card admin-card--payments" disabled>
+        <button
+          class="admin-card admin-card--payments"
+          [class.admin-card--active]="activeTab === 'payments'"
+          (click)="setTab('payments')"
+        >
           <span class="admin-card__icon">💳</span>
           <span class="admin-card__label">Payments</span>
-          <span class="admin-card__soon">Coming Soon</span>
         </button>
         @if (auth.isSuperAdmin()) {
           <a
@@ -146,6 +149,10 @@
 
         @if (activeTab === 'players') {
           <app-players-panel />
+        }
+
+        @if (activeTab === 'payments') {
+          <app-payment-receipts-panel />
         }
       </section>
     </section>
@@ -178,5 +185,6 @@
     </div>
   }
 
-
 </section>
+
+<app-modal />

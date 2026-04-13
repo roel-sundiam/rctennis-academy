@@ -1,0 +1,37 @@
+@if (config) {
+  <div class="modal-backdrop" (click)="cancel()">
+    <div
+      class="modal"
+      [class.modal--danger]="config.type === 'danger'"
+      [class.modal--alert]="config.type === 'alert'"
+      (click)="$event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="config.title"
+    >
+      <div class="modal__icon">
+        @if (config.type === 'danger') { <span>🗑️</span> }
+        @else if (config.type === 'alert') { <span>⚠️</span> }
+        @else { <span>💬</span> }
+      </div>
+
+      <h3 class="modal__title">{{ config.title }}</h3>
+      <p class="modal__message">{{ config.message }}</p>
+
+      <div class="modal__actions" [class.modal__actions--single]="config.type === 'alert'">
+        @if (config.type !== 'alert') {
+          <button class="modal__btn modal__btn--cancel" (click)="cancel()">
+            {{ cancelLabel }}
+          </button>
+        }
+        <button
+          class="modal__btn modal__btn--confirm"
+          [class.modal__btn--danger]="config.type === 'danger'"
+          (click)="confirm()"
+        >
+          {{ confirmLabel }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

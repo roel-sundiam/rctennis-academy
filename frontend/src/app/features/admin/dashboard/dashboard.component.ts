@@ -8,11 +8,13 @@ import { ReservationService } from '../../../core/services/reservation.service';
 import { BlockedSlotService } from '../../../core/services/blocked-slot.service';
 import { BookingsPanelComponent } from './bookings-panel/bookings-panel.component';
 import { PlayersPanelComponent } from './players-panel/players-panel.component';
+import { PaymentReceiptsPanelComponent } from './payment-receipts-panel/payment-receipts-panel.component';
 import { AdminProfilePanelComponent } from '../profile-panel/admin-profile-panel.component';
+import { ModalComponent } from '../../../shared/modal/modal.component';
 import { Reservation } from '../../../models/reservation.model';
 import { BlockedSlot } from '../../../models/blocked-slot.model';
 
-type AdminTab = 'bookings' | 'players';
+type AdminTab = 'bookings' | 'players' | 'payments';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +23,9 @@ type AdminTab = 'bookings' | 'players';
     RouterLink,
     BookingsPanelComponent,
     PlayersPanelComponent,
+    PaymentReceiptsPanelComponent,
     AdminProfilePanelComponent,
+    ModalComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

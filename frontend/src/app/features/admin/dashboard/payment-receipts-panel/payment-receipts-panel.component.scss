@@ -1,0 +1,594 @@
+.receipts-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// ── Sub-navigation ───────────────────────────────────────────────
+.receipts-nav {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid #e2e6ee;
+  padding-bottom: 0.75rem;
+
+  &__btn {
+    padding: 0.42rem 1rem;
+    border-radius: 999px;
+    border: 1px solid #d0d9ea;
+    background: #f4f7fb;
+    color: #3a4e6e;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+
+    &:hover {
+      background: #e8eef8;
+      border-color: #a8bce0;
+    }
+
+    &--active {
+      background: linear-gradient(120deg, #114aae 0%, #0b2f7a 100%);
+      border-color: #0b2f7a;
+      color: #fff;
+
+      &:hover {
+        background: linear-gradient(120deg, #1354c4 0%, #0d3691 100%);
+      }
+    }
+  }
+}
+
+// ── Filters bar ──────────────────────────────────────────────────
+.receipts-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-label {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: #5f7090;
+  letter-spacing: 0.01em;
+}
+
+.filter-input {
+  padding: 0.38rem 0.6rem;
+  border: 1px solid #cdd6e6;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #2d3a50;
+  background: #fff;
+  font-family: inherit;
+  min-width: 130px;
+
+  &:focus {
+    outline: none;
+    border-color: #114aae;
+    box-shadow: 0 0 0 3px rgba(17, 74, 174, 0.1);
+  }
+}
+
+// ── Table ────────────────────────────────────────────────────────
+.table-wrap {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #dde3ef;
+}
+
+.receipts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+
+  thead th {
+    background: #f0f4fb;
+    color: #3a4660;
+    font-weight: 700;
+    font-size: 0.74rem;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #dde3ef;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #edf1f7;
+    transition: background 100ms ease;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: #f7faff;
+    }
+  }
+
+  td {
+    padding: 10px 12px;
+    color: #2d3a50;
+    vertical-align: top;
+  }
+
+  .receipt-num {
+    font-weight: 700;
+    color: #114aae;
+    white-space: nowrap;
+  }
+
+  .no-wrap {
+    white-space: nowrap;
+  }
+
+  .amount {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .charge {
+    color: #b45309;
+  }
+
+  .total {
+    font-weight: 700;
+    color: #15803d;
+  }
+
+  .reason-badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: #eef3fb;
+    border: 1px solid #c6d4ec;
+    color: #1e3a6e;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .paid {
+    color: #15803d;
+  }
+
+  .balance {
+    color: #b45309;
+    font-weight: 600;
+  }
+
+  .row--expanded {
+    background: #f0f6ff !important;
+  }
+
+  .text-muted {
+    color: #8094b4;
+    font-size: 0.75rem;
+  }
+}
+
+// ── Service Charge Settlement section ────────────────────────────
+.sc-settlement {
+  background: #f8faff;
+  border: 1px solid #dde3ef;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+
+.sc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #6b7fa0;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  &__value {
+    font-size: 1.15rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+
+    &--owed   { color: #1e3a6e; }
+    &--paid   { color: #15803d; }
+    &--balance{ color: #b45309; }
+  }
+}
+
+.sc-settled-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+
+.btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid #fca5a5;
+  background: #fff1f1;
+  color: #dc2626;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+
+  &:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #fff;
+  }
+}
+
+.btn-pay-sc {
+  padding: 0.22rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid #fbbf24;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 120ms ease;
+
+  &:hover {
+    background: #fef3c7;
+    border-color: #f59e0b;
+  }
+}
+
+// ── Inline SC pay form ───────────────────────────────────────────
+.sc-pay-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1rem 1.1rem;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+
+  &__title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #92400e;
+  }
+
+  &__fields {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+    padding-top: 1px;
+  }
+}
+
+.pay-error {
+  font-size: 0.78rem;
+  color: #b91c1c;
+  font-weight: 500;
+}
+
+// ── Payment history table extras ─────────────────────────────────
+.paid {
+  color: #15803d;
+  font-weight: 600;
+}
+
+// ── Empty & loading states ───────────────────────────────────────
+.empty-state {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #8094b4;
+  font-size: 0.85rem;
+
+  p {
+    margin: 0.5rem 0 0;
+  }
+}
+
+.loading-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: #8094b4;
+  padding: 1rem 0;
+}
+
+// ── Alerts ───────────────────────────────────────────────────────
+.alert {
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+
+  &--error {
+    background: #fff1f1;
+    border: 1px solid #fca5a5;
+    color: #b91c1c;
+  }
+
+  &--success {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    color: #15803d;
+  }
+}
+
+// ── New Receipt Form ─────────────────────────────────────────────
+.receipt-form-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.form-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e3a6e;
+  margin: 0;
+}
+
+.form-subtitle {
+  font-size: 0.78rem;
+  color: #b45309;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.receipt-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 160px;
+
+  &--full {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+}
+
+.form-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #5f7090;
+  letter-spacing: 0.01em;
+
+  .required {
+    color: #dc2626;
+    margin-left: 2px;
+  }
+}
+
+.form-input {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid #cdd6e6;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  color: #2d3a50;
+  background: #fff;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: #114aae;
+    box-shadow: 0 0 0 3px rgba(17, 74, 174, 0.1);
+  }
+}
+
+.form-computed {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid #e5e9f2;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  color: #b45309;
+  background: #fffbeb;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+
+  &--total {
+    color: #15803d;
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    font-size: 0.9rem;
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  padding-top: 0.25rem;
+}
+
+// ── Buttons ──────────────────────────────────────────────────────
+.btn {
+  padding: 0.46rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 120ms ease, transform 100ms ease;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(120deg, #114aae 0%, #0b2f7a 100%);
+  color: #fff;
+  border-color: #0b2f7a;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+}
+
+.btn-secondary {
+  background: #f4f7fb;
+  color: #1f3764;
+  border-color: #bec9dc;
+
+  &:hover:not(:disabled) {
+    background: #e8eef8;
+  }
+}
+
+// ── Report ───────────────────────────────────────────────────────
+.report-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.report-section-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #3a4660;
+  margin: 0;
+}
+
+.report-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 1rem;
+  background: #f4f7fb;
+  border: 1px solid #dde3ef;
+  border-radius: 12px;
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #6b7fa0;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  &__value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e3a6e;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &--charge {
+    background: #fffbeb;
+    border-color: #fde68a;
+
+    .summary-card__value {
+      color: #b45309;
+    }
+  }
+
+  &--total {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+
+    .summary-card__value {
+      color: #15803d;
+    }
+  }
+}
+
+@media (max-width: 620px) {
+  .receipts-nav {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .receipts-filters {
+    gap: 0.5rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-group {
+    min-width: 0;
+  }
+
+  .report-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sc-settlement__row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .sc-pay-form__fields {
+    flex-direction: column;
+  }
+}

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import flatpickr from 'flatpickr';
 import { BlockedSlotService } from '../../../../core/services/blocked-slot.service';
 import { BlockedSlot } from '../../../../models/blocked-slot.model';
+import { ModalService } from '../../../../core/services/modal.service';
 
 const TIME_SLOTS = [
   '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
@@ -41,7 +42,11 @@ export class BlockedSlotsPanelComponent implements OnInit, AfterViewInit, OnDest
 
   private datePicker: any;
 
-  constructor(private service: BlockedSlotService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private service: BlockedSlotService,
+    private modalService: ModalService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void { this.load(); }
 
@@ -119,8 +124,14 @@ export class BlockedSlotsPanelComponent implements OnInit, AfterViewInit, OnDest
     });
   }
 
-  deleteSlot(id: string): void {
-    if (!confirm('Remove this blocked slot?')) return;
+  async deleteSlot(id: string): Promise<void> {
+    const confirmed = await this.modalService.open({
+      type: 'danger',
+      title: 'Remove Blocked Slot',
+      message: 'Are you sure you want to remove this blocked slot?',
+      confirmLabel: 'Remove',
+    });
+    if (!confirmed) return;
     this.deleteLoading[id] = true;
     this.service.deleteBlockedSlot(id).subscribe({
       next: () => {

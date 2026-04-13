@@ -1,0 +1,332 @@
+<div class="receipts-panel">
+
+  <!-- Sub-nav -->
+  <nav class="receipts-nav">
+    <button class="receipts-nav__btn" [class.receipts-nav__btn--active]="view === 'list'" (click)="setView('list')">
+      Receipts
+    </button>
+    <button class="receipts-nav__btn" [class.receipts-nav__btn--active]="view === 'new'" (click)="setView('new')">
+      + New Receipt
+    </button>
+    <button class="receipts-nav__btn" [class.receipts-nav__btn--active]="view === 'report'" (click)="setView('report')">
+      Report
+    </button>
+  </nav>
+
+  <!-- ── LIST VIEW ────────────────────────────────────────────────── -->
+  @if (view === 'list') {
+    <div class="receipts-filters">
+      <label class="filter-group">
+        <span class="filter-label">From</span>
+        <input type="date" class="filter-input" [(ngModel)]="filterFrom" />
+      </label>
+      <label class="filter-group">
+        <span class="filter-label">To</span>
+        <input type="date" class="filter-input" [(ngModel)]="filterTo" />
+      </label>
+      <label class="filter-group">
+        <span class="filter-label">Reason</span>
+        <select class="filter-input" [(ngModel)]="filterReason">
+          <option value="">All</option>
+          @for (r of reasons; track r) { <option [value]="r">{{ r }}</option> }
+        </select>
+      </label>
+      <label class="filter-group">
+        <span class="filter-label">Method</span>
+        <select class="filter-input" [(ngModel)]="filterMethod">
+          <option value="">All</option>
+          @for (m of paymentMethods; track m.value) { <option [value]="m.value">{{ m.label }}</option> }
+        </select>
+      </label>
+      <button class="btn btn-primary" (click)="loadList()">Filter</button>
+    </div>
+
+    @if (listLoading) {
+      <div class="loading-row"><div class="spinner" style="margin:0;"></div> Loading receipts...</div>
+    } @else if (listError) {
+      <div class="alert alert--error">{{ listError }}</div>
+    } @else if (receipts.length === 0) {
+      <div class="empty-state"><div style="font-size:2rem;">🧾</div><p>No receipts found.</p></div>
+    } @else {
+      <div class="table-wrap">
+        <table class="receipts-table">
+          <thead>
+            <tr>
+              <th>Receipt #</th>
+              <th>Player</th>
+              <th>Reason</th>
+              <th>Date</th>
+              <th>Method</th>
+              <th>Base Amount</th>
+              <th>Service Charge (2%)</th>
+              <th>Total</th>
+              <th>Reference</th>
+              <th>Issued By</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of receipts; track r._id) {
+              <tr>
+                <td class="receipt-num">{{ r.receiptNumber }}</td>
+                <td>{{ r.playerName }}</td>
+                <td><span class="reason-badge">{{ r.reason }}</span></td>
+                <td class="no-wrap">{{ formatPaymentDate(r.paymentDate) }}</td>
+                <td class="no-wrap">{{ formatMethod(r.paymentMethod) }}</td>
+                <td class="amount">{{ formatCurrency(r.baseAmount) }}</td>
+                <td class="amount charge">{{ formatCurrency(r.serviceCharge) }}</td>
+                <td class="amount total">{{ formatCurrency(r.totalAmount) }}</td>
+                <td>{{ r.paymentReference || '—' }}</td>
+                <td>{{ r.issuedBy }}</td>
+                <td><button class="btn-delete" (click)="deleteReceipt(r)" title="Delete receipt">&#10005;</button></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+
+  <!-- ── NEW RECEIPT FORM ─────────────────────────────────────────── -->
+  @if (view === 'new') {
+    <div class="receipt-form-wrap">
+      <h3 class="form-title">New Payment Receipt</h3>
+      <p class="form-subtitle">A 2% application service charge is automatically applied to each receipt.</p>
+
+      @if (formSuccess) { <div class="alert alert--success">{{ formSuccess }}</div> }
+      @if (formError)   { <div class="alert alert--error">{{ formError }}</div> }
+
+      <div class="receipt-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Player Name <span class="required">*</span></label>
+            <select class="form-input" [(ngModel)]="form.playerName">
+              <option value="">Select player</option>
+              @for (p of players; track p._id) { <option [value]="p.name">{{ p.name }}</option> }
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Reason <span class="required">*</span></label>
+            <select class="form-input" [(ngModel)]="form.reason">
+              <option value="">Select reason</option>
+              @for (r of reasons; track r) { <option [value]="r">{{ r }}</option> }
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Payment Date <span class="required">*</span></label>
+            <input type="date" class="form-input" [(ngModel)]="form.paymentDate" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Payment Method <span class="required">*</span></label>
+            <select class="form-input" [(ngModel)]="form.paymentMethod">
+              <option value="">Select method</option>
+              @for (m of paymentMethods; track m.value) { <option [value]="m.value">{{ m.label }}</option> }
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Reference No.</label>
+            <input type="text" class="form-input" [(ngModel)]="form.paymentReference" placeholder="Optional" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Base Amount (₱) <span class="required">*</span></label>
+            <input type="number" class="form-input" [(ngModel)]="form.baseAmount"
+              (ngModelChange)="onAmountChange()" min="1" step="0.01" placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Service Charge (2%)</label>
+            <div class="form-computed">{{ formatCurrency(computedServiceCharge) }}</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total Amount</label>
+            <div class="form-computed form-computed--total">{{ formatCurrency(computedTotal) }}</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group form-group--full">
+            <label class="form-label">Notes</label>
+            <input type="text" class="form-input" [(ngModel)]="form.notes" placeholder="Optional" />
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-secondary" (click)="resetForm()" [disabled]="formSubmitting">Clear</button>
+          <button class="btn btn-primary" (click)="submitForm()" [disabled]="formSubmitting">
+            @if (formSubmitting) { Saving... } @else { Issue Receipt }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── REPORT VIEW ──────────────────────────────────────────────── -->
+  @if (view === 'report') {
+    <div class="report-wrap">
+      <div class="receipts-filters">
+        <label class="filter-group">
+          <span class="filter-label">From</span>
+          <input type="date" class="filter-input" [(ngModel)]="reportFrom" />
+        </label>
+        <label class="filter-group">
+          <span class="filter-label">To</span>
+          <input type="date" class="filter-input" [(ngModel)]="reportTo" />
+        </label>
+        <button class="btn btn-primary" (click)="loadReport()">Generate</button>
+      </div>
+
+      @if (reportLoading) {
+        <div class="loading-row"><div class="spinner" style="margin:0;"></div> Generating report...</div>
+      } @else if (reportError) {
+        <div class="alert alert--error">{{ reportError }}</div>
+      } @else if (report) {
+
+        <!-- Summary cards (filtered by date range) -->
+        <div class="report-summary">
+          <div class="summary-card">
+            <span class="summary-card__label">Total Receipts</span>
+            <span class="summary-card__value">{{ report.summary.totalReceipts }}</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-card__label">Total Base Amount</span>
+            <span class="summary-card__value">{{ formatCurrency(report.summary.totalBaseAmount) }}</span>
+          </div>
+          <div class="summary-card summary-card--charge">
+            <span class="summary-card__label">Service Charge (2%) — Period</span>
+            <span class="summary-card__value">{{ formatCurrency(report.summary.totalServiceCharge) }}</span>
+          </div>
+          <div class="summary-card summary-card--total">
+            <span class="summary-card__label">Total Revenue</span>
+            <span class="summary-card__value">{{ formatCurrency(report.summary.totalAmount) }}</span>
+          </div>
+        </div>
+
+        <!-- Service Charge Settlement (always all-time) -->
+        <h4 class="report-section-title">Service Charge Settlement (All-Time)</h4>
+        <div class="sc-settlement">
+          <div class="sc-settlement__row">
+            <div class="sc-stat">
+              <span class="sc-stat__label">Total Owed</span>
+              <span class="sc-stat__value sc-stat__value--owed">{{ formatCurrency(report.scLedger.totalOwed) }}</span>
+            </div>
+            <div class="sc-stat">
+              <span class="sc-stat__label">Total Paid</span>
+              <span class="sc-stat__value sc-stat__value--paid">{{ formatCurrency(report.scLedger.totalPaid) }}</span>
+            </div>
+            <div class="sc-stat">
+              <span class="sc-stat__label">Outstanding Balance</span>
+              @if (report.scLedger.balance <= 0) {
+                <span class="sc-stat__value sc-settled-badge">✓ Fully Settled — ₱0.00</span>
+              } @else {
+                <span class="sc-stat__value sc-stat__value--balance">{{ formatCurrency(report.scLedger.balance) }}</span>
+              }
+            </div>
+            @if (report.scLedger.balance > 0 && !showPayForm) {
+              <button class="btn-pay-sc" (click)="openPayForm()">Pay Service Charge</button>
+            }
+          </div>
+        </div>
+
+        <!-- Inline pay form -->
+        @if (showPayForm) {
+          <div class="sc-pay-form">
+            <span class="sc-pay-form__title">Record Service Charge Payment</span>
+            <div class="sc-pay-form__fields">
+              <label class="filter-group">
+                <span class="filter-label">Amount (₱) *</span>
+                <input type="number" class="filter-input" [(ngModel)]="payAmount"
+                  [max]="report.scLedger.balance" min="0.01" step="0.01" style="width:130px;" />
+              </label>
+              <label class="filter-group">
+                <span class="filter-label">Date *</span>
+                <input type="date" class="filter-input" [(ngModel)]="payDate" />
+              </label>
+              <label class="filter-group">
+                <span class="filter-label">Paid To *</span>
+                <input type="text" class="filter-input" [(ngModel)]="payPaidTo" style="width:160px;" />
+              </label>
+              <label class="filter-group">
+                <span class="filter-label">Method *</span>
+                <select class="filter-input" [(ngModel)]="payMethod">
+                  @for (m of scPaymentMethods; track m.value) {
+                    <option [value]="m.value">{{ m.label }}</option>
+                  }
+                </select>
+              </label>
+              <label class="filter-group">
+                <span class="filter-label">Account No.</span>
+                <input type="text" class="filter-input" [(ngModel)]="payAccount" style="width:140px;" />
+              </label>
+              <label class="filter-group">
+                <span class="filter-label">Reference No.</span>
+                <input type="text" class="filter-input" [(ngModel)]="payReference" placeholder="Optional" style="width:140px;" />
+              </label>
+              <label class="filter-group">
+                <span class="filter-label">Notes</span>
+                <input type="text" class="filter-input" [(ngModel)]="payNotes" placeholder="Optional" style="width:150px;" />
+              </label>
+              <div class="sc-pay-form__actions">
+                <button class="btn btn-primary" (click)="submitPay()" [disabled]="paySubmitting">
+                  @if (paySubmitting) { Saving... } @else { Confirm }
+                </button>
+                <button class="btn btn-secondary" (click)="closePayForm()" [disabled]="paySubmitting">Cancel</button>
+              </div>
+            </div>
+            @if (payError) { <span class="pay-error">{{ payError }}</span> }
+          </div>
+        }
+
+
+        @if (report.byMethod.length > 0) {
+          <h4 class="report-section-title">By Payment Method</h4>
+          <div class="table-wrap">
+            <table class="receipts-table">
+              <thead>
+                <tr><th>Method</th><th>Receipts</th><th>Base Amount</th><th>Service Charge (2%)</th><th>Total</th></tr>
+              </thead>
+              <tbody>
+                @for (row of report.byMethod; track row._id) {
+                  <tr>
+                    <td>{{ formatMethod(row._id) }}</td>
+                    <td>{{ row.count }}</td>
+                    <td class="amount">{{ formatCurrency(row.totalBaseAmount) }}</td>
+                    <td class="amount charge">{{ formatCurrency(row.totalServiceCharge) }}</td>
+                    <td class="amount total">{{ formatCurrency(row.totalAmount) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
+        @if (report.byReason.length > 0) {
+          <h4 class="report-section-title">By Reason</h4>
+          <div class="table-wrap">
+            <table class="receipts-table">
+              <thead>
+                <tr><th>Reason</th><th>Receipts</th><th>Base Amount</th><th>Service Charge (2%)</th><th>Total</th></tr>
+              </thead>
+              <tbody>
+                @for (row of report.byReason; track row._id) {
+                  <tr>
+                    <td><span class="reason-badge">{{ row._id }}</span></td>
+                    <td>{{ row.count }}</td>
+                    <td class="amount">{{ formatCurrency(row.totalBaseAmount) }}</td>
+                    <td class="amount charge">{{ formatCurrency(row.totalServiceCharge) }}</td>
+                    <td class="amount total">{{ formatCurrency(row.totalAmount) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      }
+    </div>
+  }
+
+</div>
