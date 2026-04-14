@@ -117,19 +117,35 @@
           </select>
         </div>
 
-        <!-- Day of Week -->
+        <!-- Recurrence Type -->
         <div class="form-group">
-          <label class="form-label">Day of Week <span class="required">*</span></label>
+          <label class="form-label">Repeat <span class="required">*</span></label>
           <div class="time-grid">
-            @for (day of DAYS_OF_WEEK; track day.value) {
+            @for (rt of RECURRENCE_TYPES; track rt.value) {
               <button type="button" class="time-btn"
-                [class.time-btn--selected]="recurringForm.dayOfWeek === day.value"
-                (click)="recurringForm.dayOfWeek = day.value">
-                {{ day.label }}
+                [class.time-btn--selected]="recurringForm.recurrenceType === rt.value"
+                (click)="recurringForm.recurrenceType = rt.value">
+                {{ rt.label }}
               </button>
             }
           </div>
         </div>
+
+        <!-- Day of Week (weekly only) -->
+        @if (recurringForm.recurrenceType === 'weekly') {
+          <div class="form-group">
+            <label class="form-label">Day of Week <span class="required">*</span></label>
+            <div class="time-grid">
+              @for (day of DAYS_OF_WEEK; track day.value) {
+                <button type="button" class="time-btn"
+                  [class.time-btn--selected]="recurringForm.dayOfWeek === day.value"
+                  (click)="recurringForm.dayOfWeek = day.value">
+                  {{ day.label }}
+                </button>
+              }
+            </div>
+          </div>
+        }
 
         <!-- From Date -->
         <div class="form-group">
@@ -199,7 +215,7 @@
         @if (recurringForm.playerName && recurringForm.rangeStart && recurringForm.rangeEnd && recurringForm.StartTime && recurringForm.EndTime) {
           <div class="alert alert--info">
             &#128260; <strong>{{ recurringForm.playerName }}</strong> &mdash;
-            every {{ DAYS_OF_WEEK[recurringForm.dayOfWeek].label }},
+            {{ recurrenceLabel() }},
             {{ formatTime(recurringForm.StartTime) }} &ndash; {{ formatTime(recurringForm.EndTime) }},
             from {{ formatDate(recurringForm.rangeStart) }} to {{ formatDate(recurringForm.rangeEnd) }}
           </div>

@@ -42,8 +42,15 @@ export class BlockedSlotsPanelComponent implements OnInit, AfterViewInit, OnDest
   customReason = '';
 
   // Recurring form
-  recurringForm = { courtId: 'Court1', dayOfWeek: 3, rangeStart: '', rangeEnd: '', StartTime: '', EndTime: '', reason: '', playerName: '' };
+  recurringForm = { courtId: 'Court1', recurrenceType: 'weekly' as 'daily' | 'weekly' | 'monthly' | 'yearly', dayOfWeek: 3, rangeStart: '', rangeEnd: '', StartTime: '', EndTime: '', reason: '', playerName: '' };
   customReasonRecurring = '';
+
+  readonly RECURRENCE_TYPES: { label: string; value: 'daily' | 'weekly' | 'monthly' | 'yearly' }[] = [
+    { label: 'Every Day',   value: 'daily'   },
+    { label: 'Every Week',  value: 'weekly'  },
+    { label: 'Every Month', value: 'monthly' },
+    { label: 'Every Year',  value: 'yearly'  },
+  ];
 
   players: Player[] = [];
 
@@ -118,7 +125,7 @@ export class BlockedSlotsPanelComponent implements OnInit, AfterViewInit, OnDest
     this.mode = 'one-time';
     this.form = { courtId: 'Court1', ReserveDate: '', StartTime: '', EndTime: '', reason: '' };
     this.customReason = '';
-    this.recurringForm = { courtId: 'Court1', dayOfWeek: 3, rangeStart: '', rangeEnd: '', StartTime: '', EndTime: '', reason: '', playerName: '' };
+    this.recurringForm = { courtId: 'Court1', recurrenceType: 'weekly', dayOfWeek: 3, rangeStart: '', rangeEnd: '', StartTime: '', EndTime: '', reason: '', playerName: '' };
     this.customReasonRecurring = '';
     this.formError = '';
     setTimeout(() => this.initDatePicker(), 0);
@@ -257,14 +264,15 @@ export class BlockedSlotsPanelComponent implements OnInit, AfterViewInit, OnDest
     this.formError = '';
 
     const payload: CreateRecurringBlockedSlotDto = {
-      courtId:    this.recurringForm.courtId,
-      dayOfWeek:  this.recurringForm.dayOfWeek,
-      rangeStart: this.recurringForm.rangeStart,
-      rangeEnd:   this.recurringForm.rangeEnd,
-      StartTime:  this.recurringForm.StartTime,
-      EndTime:    this.recurringForm.EndTime,
+      courtId:        this.recurringForm.courtId,
+      recurrenceType: this.recurringForm.recurrenceType,
+      dayOfWeek:      this.recurringForm.recurrenceType === 'weekly' ? this.recurringForm.dayOfWeek : undefined,
+      rangeStart:     this.recurringForm.rangeStart,
+      rangeEnd:       this.recurringForm.rangeEnd,
+      StartTime:      this.recurringForm.StartTime,
+      EndTime:        this.recurringForm.EndTime,
       reason,
-      playerName: this.recurringForm.playerName
+      playerName:     this.recurringForm.playerName
     };
 
     this.service.createRecurringBlockedSlots(payload).subscribe({
@@ -321,6 +329,24 @@ export class BlockedSlotsPanelComponent implements OnInit, AfterViewInit, OnDest
         this.cdr.detectChanges();
       }
     });
+  }
+
+  recurrenceLabel(): string {
+    const { recurrenceType, dayOfWeek, rangeStart } = this.recurringForm;
+    if (recurrenceType === 'daily')   return 'every day';
+    if (recurrenceType === 'weekly')  return `every ${this.DAYS_OF_WEEK[dayOfWeek].label}`;
+    if (recurrenceType === 'monthly') {
+      if (!rangeStart) return 'every month';
+      const [, , d] = rangeStart.split('-').map(Number);
+      return `every month on the ${d}${['th','st','nd','rd'][d <= 3 ? d : 0] ?? 'th'}`;
+    }
+    if (recurrenceType === 'yearly') {
+      if (!rangeStart) return 'every year';
+      const [, m, d] = rangeStart.split('-').map(Number);
+      const monthName = new Date(2000, m - 1, 1).toLocaleString('en-US', { month: 'long' });
+      return `every year on ${monthName} ${d}`;
+    }
+    return '';
   }
 
   formatDate(d: string): string {

@@ -14,7 +14,8 @@ export interface BlockedSlot {
 
 export interface CreateRecurringBlockedSlotDto {
   courtId: string;
-  dayOfWeek: number;  // 0=Sun … 6=Sat
+  recurrenceType: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  dayOfWeek?: number; // 0=Sun … 6=Sat (only for weekly)
   rangeStart: string; // YYYY-MM-DD
   rangeEnd: string;   // YYYY-MM-DD
   StartTime: string;
