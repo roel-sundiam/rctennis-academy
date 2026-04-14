@@ -449,6 +449,54 @@
 }
 
 // ============================================================
+// GOOGLE REVIEWS
+// ============================================================
+.landing-reviews {
+  background: linear-gradient(180deg, #eef3fc 0%, #f8faff 100%);
+  border-top: 1px solid var(--c-border);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.landing-reviews__banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 20px;
+  padding: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 3vw, 2rem);
+  box-shadow: var(--c-shadow-sm);
+
+  @media (max-width: 560px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.landing-reviews__banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  p {
+    font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+    color: var(--c-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+.landing-reviews__stars {
+  display: flex;
+  gap: 0.1rem;
+  font-size: 1.6rem;
+  line-height: 1;
+
+  span { color: #f5a623; }
+}
+
+// ============================================================
 // CERTIFICATIONS
 // ============================================================
 .landing-certs {

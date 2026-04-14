@@ -13,6 +13,7 @@ export class HomeComponent implements OnInit {
   menuOpen = false;
   tournaments: any[] = [];
   tournamentsLoading = true;
+  googleReviewsUrl = 'https://www.google.com/search?rlz=1C1GCEU_enPH1137PH1137&sca_esv=81ef8ac98c35c5fb&sxsrf=ANbL-n6Xsp9tWulvEuv0PIqQrMnOMmA1IQ:1776140980483&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOXgy2cKWGEU__WWUCo1-CNtKD9qPhm7syJ3Aw4jGuB9BYjdjtFtiQ5Y8BjnZp-qI_cR626uiIfuUzrjjKSqJu-A_Jbn-5mYWBxq5btawJs_ibYdz-uqm7V4krq6qYEgVYH8bp0kmiI1Fglev4N9_gWnT8Zyd&q=Renell+Crescini+Tennis+Camp-Angeles+City-RC+TENNIS+CAMP+Reviews&sa=X&ved=2ahUKEwjhxtnhwOyTAxXuUGwGHehHKhsQ0bkNegQIRRAF&biw=1707&bih=932&dpr=1.5';
 
   constructor(
     private auth: AuthService,
@@ -30,6 +31,7 @@ export class HomeComponent implements OnInit {
         this.tournamentsLoading = false;
       }
     });
+
   }
 
   formatTime(time: string): string {
