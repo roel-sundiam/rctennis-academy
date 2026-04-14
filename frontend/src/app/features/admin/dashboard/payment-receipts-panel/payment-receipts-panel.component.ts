@@ -136,7 +136,8 @@ export class PaymentReceiptsPanelComponent implements OnInit {
   // ── New Receipt Form ──────────────────────────────────────────────
   onAmountChange(): void {
     const base = Number(this.form.baseAmount) || 0;
-    this.computedServiceCharge = Math.round(base * 0.02 * 100) / 100;
+    const isCourtFee = this.form.reason === 'Court Fee';
+    this.computedServiceCharge = isCourtFee ? Math.round(base * 0.02 * 100) / 100 : 0;
     this.computedTotal = Math.round((base + this.computedServiceCharge) * 100) / 100;
   }
 

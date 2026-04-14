@@ -2,6 +2,7 @@ const PaymentReceipt = require('../models/PaymentReceipt');
 const ServiceChargePayment = require('../models/ServiceChargePayment');
 
 const SERVICE_CHARGE_RATE = 0.02; // 2%
+const SC_REASONS = ['Court Fee'];         // only these reasons incur a service charge
 
 async function generateReceiptNumber() {
   const year = new Date().getFullYear();
@@ -23,7 +24,9 @@ async function createReceipt(req, res, next) {
       return res.status(400).json({ message: 'baseAmount must be a positive number.' });
     }
 
-    const serviceCharge = Math.round(base * SERVICE_CHARGE_RATE * 100) / 100;
+    const serviceCharge = SC_REASONS.includes(reason)
+      ? Math.round(base * SERVICE_CHARGE_RATE * 100) / 100
+      : 0;
     const totalAmount   = Math.round((base + serviceCharge) * 100) / 100;
     const receiptNumber = await generateReceiptNumber();
 
