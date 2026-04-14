@@ -13,6 +13,7 @@ import { RouterLink } from '@angular/router';
 import flatpickr from 'flatpickr';
 import { PlayerService } from '../../core/services/player.service';
 import { ReservationService } from '../../core/services/reservation.service';
+import { BlockedSlotService } from '../../core/services/blocked-slot.service';
 import { Player } from '../../models/player.model';
 import { Reservation } from '../../models/reservation.model';
 
@@ -71,6 +72,7 @@ export class BookingComponent implements OnInit, AfterViewInit, OnDestroy {
   paymentMethods = PAYMENT_METHODS;
 
   bookedSlots = new Set<string>();
+  blockedSlots: Array<{ StartTime: string; EndTime: string }> = [];
   loadingSlots = false;
 
   submitting = false;
@@ -85,6 +87,7 @@ export class BookingComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private playerService: PlayerService,
     private reservationService: ReservationService,
+    private blockedSlotService: BlockedSlotService,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -126,6 +129,17 @@ export class BookingComponent implements OnInit, AfterViewInit, OnDestroy {
     const month = dateStr.slice(0, 7); // "YYYY-MM"
     this.loadingSlots = true;
     this.bookedSlots = new Set();
+    this.blockedSlots = [];
+
+    let reservationsDone = false;
+    let blockedDone = false;
+    const checkDone = () => {
+      if (reservationsDone && blockedDone) {
+        this.loadingSlots = false;
+        this.cdr.detectChanges();
+      }
+    };
+
     this.reservationService.getPublicSchedule(month).subscribe({
       next: (reservations) => {
         this.bookedSlots = new Set(
@@ -133,18 +147,33 @@ export class BookingComponent implements OnInit, AfterViewInit, OnDestroy {
             .filter(r => r.ReserveDate === dateStr)
             .map(r => r.StartTime)
         );
-        this.loadingSlots = false;
-        this.cdr.detectChanges();
+        reservationsDone = true;
+        checkDone();
       },
-      error: () => {
-        this.loadingSlots = false;
-        this.cdr.detectChanges();
+      error: () => { reservationsDone = true; checkDone(); },
+    });
+
+    this.blockedSlotService.getPublicBlockedSlots(month).subscribe({
+      next: (slots) => {
+        this.blockedSlots = slots
+          .filter(s => s.ReserveDate === dateStr)
+          .map(s => ({ StartTime: s.StartTime, EndTime: s.EndTime }));
+        blockedDone = true;
+        checkDone();
       },
+      error: () => { blockedDone = true; checkDone(); },
     });
   }
 
   isBooked(slot: string): boolean {
     return this.bookedSlots.has(slot);
+  }
+
+  isBlocked(slot: string): boolean {
+    // A time slot button (e.g. "17:00") represents the hour starting at that time.
+    // It's blocked if any blocked range overlaps [slot, slot+1h).
+    const slotEnd = `${String(Number(slot.split(':')[0]) + 1).padStart(2, '0')}:00`;
+    return this.blockedSlots.some(b => b.StartTime < slotEnd && b.EndTime > slot);
   }
 
   isPast(slot: string): boolean {
@@ -154,7 +183,7 @@ export class BookingComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isUnavailable(slot: string): boolean {
-    return this.isBooked(slot) || this.isPast(slot);
+    return this.isBooked(slot) || this.isBlocked(slot) || this.isPast(slot);
   }
 
   selectStartTime(time: string): void {

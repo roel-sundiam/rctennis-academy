@@ -133,14 +133,17 @@
                   class="time-btn"
                   [class.time-btn--selected]="form.StartTime === slot"
                   [class.time-btn--booked]="isBooked(slot)"
-                  [class.time-btn--past]="isPast(slot) && !isBooked(slot)"
+                  [class.time-btn--blocked]="isBlocked(slot) && !isBooked(slot)"
+                  [class.time-btn--past]="isPast(slot) && !isBooked(slot) && !isBlocked(slot)"
                   [disabled]="isUnavailable(slot) || loadingSlots"
-                  [title]="isBooked(slot) ? 'Already booked' : isPast(slot) ? 'Time has passed' : ''"
+                  [title]="isBooked(slot) ? 'Already booked' : isBlocked(slot) ? 'Slot is blocked' : isPast(slot) ? 'Time has passed' : ''"
                   (click)="selectStartTime(slot)"
                 >
                   {{ formatTime(slot) }}
                   @if (isBooked(slot)) {
                     <span class="time-btn__taken">Booked</span>
+                  } @else if (isBlocked(slot)) {
+                    <span class="time-btn__taken time-btn__taken--blocked">Blocked</span>
                   } @else if (isPast(slot)) {
                     <span class="time-btn__taken time-btn__taken--past">Past</span>
                   }

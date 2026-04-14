@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { BlockedSlot } from '../../models/blocked-slot.model';
+import { BlockedSlot, CreateRecurringBlockedSlotDto, RecurringCreateResponse } from '../../models/blocked-slot.model';
 
 @Injectable({ providedIn: 'root' })
 export class BlockedSlotService {
@@ -30,5 +30,13 @@ export class BlockedSlotService {
 
   deleteBlockedSlot(id: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+  }
+
+  createRecurringBlockedSlots(data: CreateRecurringBlockedSlotDto): Observable<RecurringCreateResponse> {
+    return this.http.post<RecurringCreateResponse>(`${this.apiUrl}/recurring`, data);
+  }
+
+  deleteBlockedSlotGroup(groupId: string): Observable<{ message: string; deletedCount: number }> {
+    return this.http.delete<{ message: string; deletedCount: number }>(`${this.apiUrl}/group/${groupId}`);
   }
 }

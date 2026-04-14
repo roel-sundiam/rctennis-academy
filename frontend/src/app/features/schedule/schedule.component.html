@@ -136,6 +136,9 @@
                     <span class="schedule-item__name">{{ s.reason }}</span>
                     <span class="badge badge--rejected">Blocked</span>
                   </div>
+                  @if (s.playerName) {
+                    <span class="schedule-item__meta">&#128100; {{ s.playerName }}</span>
+                  }
                   <span class="schedule-item__meta">&#128337; {{ formatTime(s.StartTime) }} &ndash; {{ formatTime(s.EndTime) }}</span>
                 </article>
               }
@@ -186,7 +189,10 @@
                   @for (s of day.blocked; track s._id) {
                     <div class="slist-item slist-item--blocked">
                       <span class="slist-item__time">{{ formatTime(s.StartTime) }} – {{ formatTime(s.EndTime) }}</span>
-                      <span class="slist-item__name">{{ s.reason }}</span>
+                      <span class="slist-item__name">
+                        {{ s.reason }}
+                        @if (s.playerName) { &mdash; {{ s.playerName }} }
+                      </span>
                       <span class="badge badge--rejected">Blocked</span>
                     </div>
                   }

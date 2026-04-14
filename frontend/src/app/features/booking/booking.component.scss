@@ -156,6 +156,24 @@
   }
 }
 
+.booking-page .time-btn--blocked {
+  background: #fffbeb;
+  border-color: #fcd34d;
+  color: #92400e;
+  cursor: not-allowed;
+  opacity: 0.75;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+
+  &:hover {
+    background: #fffbeb;
+    border-color: #fcd34d;
+    color: #92400e;
+  }
+}
+
 .time-btn__taken {
   font-size: 0.6rem;
   font-weight: 700;
@@ -170,6 +188,11 @@
   &--past {
     color: #6b7280;
     background: #e5e7eb;
+  }
+
+  &--blocked {
+    color: #92400e;
+    background: #fef3c7;
   }
 }
 
