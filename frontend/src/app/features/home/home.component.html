@@ -119,27 +119,27 @@
         <h2 class="landing-section-title">Upcoming Tournaments</h2>
       </header>
 
-      @if (tournamentsLoading) {
+      @if (tournamentsLoading()) {
         <div class="landing-tournaments__state">
           <span class="landing-tournaments__spinner" aria-hidden="true"></span>
           Loading schedule…
         </div>
       }
 
-      @if (!tournamentsLoading && tournamentsError) {
+      @if (!tournamentsLoading() && tournamentsError()) {
         <div class="landing-tournaments__state">
           <p>Could not load tournament schedule. Please try again later.</p>
         </div>
       }
 
-      @if (!tournamentsLoading && !tournamentsError && tournaments.length === 0) {
+      @if (!tournamentsLoading() && !tournamentsError() && tournaments().length === 0) {
         <div class="landing-tournaments__state">
           <span aria-hidden="true">🏆</span>
           <p>No upcoming tournaments at this time. Check back soon.</p>
         </div>
       }
 
-      @for (t of tournaments; track t._id) {
+      @for (t of tournaments(); track t._id) {
         <div class="landing-tournament">
           <div class="landing-tournament__header">
             <h3 class="landing-tournament__name">{{ t.name }}</h3>
