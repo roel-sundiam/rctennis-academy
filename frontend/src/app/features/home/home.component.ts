@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.http.get<any[]>('/api/tournaments').pipe(timeout(10000)).subscribe({
+    this.http.get<any[]>('/api/tournaments').pipe(timeout(15000)).subscribe({
       next: data => {
         this.tournaments = data;
         this.tournamentsLoading = false;

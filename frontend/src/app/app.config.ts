@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, inject } from '@angular/core';
-import { provideRouter, Router, NavigationEnd } from '@angular/router';
+import { provideRouter, Router, NavigationEnd, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { APP_INITIALIZER } from '@angular/core';
 import { filter } from 'rxjs';
@@ -20,7 +20,7 @@ function initRouteTracking() {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(routes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' })),
     provideHttpClient(withInterceptors([jwtInterceptor])),
     {
       provide: APP_INITIALIZER,
