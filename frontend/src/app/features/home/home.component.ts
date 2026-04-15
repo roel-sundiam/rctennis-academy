@@ -1,7 +1,7 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { Component, OnInit, AfterViewInit, signal, inject, DOCUMENT } from '@angular/core';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { timeout } from 'rxjs';
+import { timeout, take } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -10,18 +10,31 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   menuOpen = false;
   tournaments = signal<any[]>([]);
   tournamentsLoading = signal(true);
   tournamentsError = signal(false);
   googleReviewsUrl = 'https://www.google.com/search?rlz=1C1GCEU_enPH1137PH1137&sca_esv=81ef8ac98c35c5fb&sxsrf=ANbL-n6Xsp9tWulvEuv0PIqQrMnOMmA1IQ:1776140980483&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOXgy2cKWGEU__WWUCo1-CNtKD9qPhm7syJ3Aw4jGuB9BYjdjtFtiQ5Y8BjnZp-qI_cR626uiIfuUzrjjKSqJu-A_Jbn-5mYWBxq5btawJs_ibYdz-uqm7V4krq6qYEgVYH8bp0kmiI1Fglev4N9_gWnT8Zyd&q=Renell+Crescini+Tennis+Camp-Angeles+City-RC+TENNIS+CAMP+Reviews&sa=X&ved=2ahUKEwjhxtnhwOyTAxXuUGwGHehHKhsQ0bkNegQIRRAF&biw=1707&bih=932&dpr=1.5';
 
+  private route = inject(ActivatedRoute);
+  private doc = inject(DOCUMENT);
+
   constructor(
     private auth: AuthService,
     private router: Router,
     private http: HttpClient,
   ) {}
+
+  ngAfterViewInit(): void {
+    this.route.fragment.pipe(take(1)).subscribe(fragment => {
+      if (fragment) {
+        setTimeout(() => {
+          this.doc.getElementById(fragment)?.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.http.get<any[]>('/api/tournaments').pipe(timeout(15000)).subscribe({
