@@ -126,7 +126,13 @@
         </div>
       }
 
-      @if (!tournamentsLoading && tournaments.length === 0) {
+      @if (!tournamentsLoading && tournamentsError) {
+        <div class="landing-tournaments__state">
+          <p>Could not load tournament schedule. Please try again later.</p>
+        </div>
+      }
+
+      @if (!tournamentsLoading && !tournamentsError && tournaments.length === 0) {
         <div class="landing-tournaments__state">
           <span aria-hidden="true">🏆</span>
           <p>No upcoming tournaments at this time. Check back soon.</p>
