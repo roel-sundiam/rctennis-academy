@@ -76,6 +76,26 @@
         }
       </div>
 
+      @if (upcomingAlerts.length > 0) {
+        <div class="upcoming-alerts" role="alert" aria-live="polite">
+          @for (alert of upcomingAlerts; track alert.id) {
+            <div class="upcoming-alert-item">
+              <span class="upcoming-alert-item__icon">⏰</span>
+              <span class="upcoming-alert-item__text">
+                Starting in ~{{ minutesUntil(alert.startTime) }} min —
+                <strong>{{ alert.label }}</strong> · {{ alert.courtId }}
+                ({{ formatTime(alert.startTime) }})
+              </span>
+              <button
+                class="upcoming-alert-item__close"
+                (click)="dismissUpcomingAlert(alert.id)"
+                aria-label="Dismiss"
+              >&#10005;</button>
+            </div>
+          }
+        </div>
+      }
+
       <nav class="admin-cards" role="navigation" aria-label="Admin sections">
         <button
           class="admin-card admin-card--bookings"
@@ -97,9 +117,17 @@
           class="admin-card admin-card--players"
           [class.admin-card--active]="activeTab === 'players'"
           (click)="setTab('players')"
+          [attr.aria-label]="
+            'Players' + (pendingPlayerBadgeCount > 0 ? ', ' + pendingPlayerBadgeCount + ' pending registration' : '')
+          "
         >
           <span class="admin-card__icon">👥</span>
           <span class="admin-card__label">Players</span>
+          @if (pendingPlayerBadgeCount > 0) {
+            <span class="notif-badge admin-card__badge">{{
+              pendingPlayerBadgeCount > 99 ? '99+' : pendingPlayerBadgeCount
+            }}</span>
+          }
         </button>
         <a routerLink="/schedule" class="admin-card admin-card--link admin-card--schedule">
           <span class="admin-card__icon">📅</span>
@@ -180,6 +208,31 @@
             }}<br />
           </p>
           <button class="toast-card__action" (click)="setTab('bookings')">View Pending</button>
+        </div>
+      }
+    </div>
+  }
+
+  @if (playerToasts.length > 0) {
+    <div class="toast-stack toast-stack--players" role="status" aria-live="polite">
+      @for (toast of playerToasts; track toast._id) {
+        <div class="toast-card">
+          <div class="toast-card__header">
+            <span class="toast-card__icon">👤</span>
+            <strong class="toast-card__title">New Registration</strong>
+            <button
+              class="toast-card__close"
+              (click)="dismissPlayerToast(toast._id)"
+              aria-label="Dismiss"
+            >
+              &#10005;
+            </button>
+          </div>
+          <p class="toast-card__body">
+            <strong>{{ toast.name }}</strong><br />
+            Awaiting approval
+          </p>
+          <button class="toast-card__action" (click)="setTab('players')">View Players</button>
         </div>
       }
     </div>

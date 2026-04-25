@@ -995,3 +995,209 @@
     font-style: italic;
   }
 }
+
+// ============================================================
+// REGISTER BUTTON (nav)
+// ============================================================
+.landing-nav__register-btn {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--c-primary);
+  background: transparent;
+  border: 1.5px solid var(--c-primary);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+
+  &:hover {
+    background: var(--c-primary);
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(17, 74, 174, 0.35);
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: 720px) {
+  .landing-nav__register-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    border-radius: 10px;
+    border-width: 1.5px;
+  }
+}
+
+// ============================================================
+// REGISTER MODAL
+// ============================================================
+.landing-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 32, 79, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  cursor: pointer;
+}
+
+.landing-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 201;
+  background: var(--c-surface);
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(11, 47, 122, 0.22);
+  width: min(420px, calc(100vw - 2rem));
+  padding: clamp(1.5rem, 5vw, 2rem);
+}
+
+.landing-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--c-muted);
+  transition: background 140ms ease, color 140ms ease;
+
+  &:hover {
+    background: var(--c-border);
+    color: var(--c-text);
+  }
+}
+
+.landing-modal__title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--c-text);
+  margin: 0 0 0.35rem;
+  padding-right: 2rem;
+}
+
+.landing-modal__sub {
+  font-size: 0.88rem;
+  color: var(--c-muted);
+  margin: 0 0 1.25rem;
+}
+
+.landing-modal__error {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+}
+
+.landing-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.landing-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.landing-modal__label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.landing-modal__required {
+  color: #dc2626;
+  margin-left: 2px;
+}
+
+.landing-modal__input {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--c-text);
+  background: var(--c-bg);
+  border: 1.5px solid var(--c-border);
+  border-radius: 10px;
+  padding: 0.6rem 0.85rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--c-primary);
+    box-shadow: 0 0 0 3px rgba(17, 74, 174, 0.12);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.landing-modal__submit {
+  width: 100%;
+  margin-top: 0.25rem;
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.landing-modal__success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--c-text);
+    margin: 0;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: var(--c-muted);
+    margin: 0;
+    line-height: 1.55;
+  }
+}
+
+.landing-modal__success-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dcfce7;
+  color: #16a34a;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  font-weight: 700;
+}

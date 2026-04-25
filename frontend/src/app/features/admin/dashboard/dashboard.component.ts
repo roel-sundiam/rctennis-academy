@@ -13,8 +13,17 @@ import { AdminProfilePanelComponent } from '../profile-panel/admin-profile-panel
 import { ModalComponent } from '../../../shared/modal/modal.component';
 import { Reservation } from '../../../models/reservation.model';
 import { BlockedSlot } from '../../../models/blocked-slot.model';
+import { Player } from '../../../models/player.model';
 
 type AdminTab = 'bookings' | 'players' | 'payments';
+
+interface UpcomingAlert {
+  id: string;
+  label: string;
+  courtId: string;
+  startTime: string;
+  type: 'booking' | 'blocked';
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -37,12 +46,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
   pendingBadgeCount = 0;
   toasts: Reservation[] = [];
 
+  pendingPlayerBadgeCount = 0;
+  playerToasts: Player[] = [];
+
+  upcomingAlerts: UpcomingAlert[] = [];
+
   todayLabel = '';
   todayBookings: Reservation[] = [];
   todayBlocked: BlockedSlot[] = [];
   todayLoading = false;
 
   private subs = new Subscription();
+  private upcomingCheckHandle: ReturnType<typeof setInterval> | null = null;
+  private dismissedAlertIds = new Set<string>();
 
   constructor(
     public auth: AuthService,
@@ -57,6 +73,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.notificationService.requestPermission();
     this.notificationService.startPolling(30_000);
     this.loadTodaySchedule();
+    this.startUpcomingCheck();
 
     this.subs.add(
       this.notificationService.newBookingCount$.subscribe(
@@ -70,20 +87,85 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.showToast(reservation);
       })
     );
+
+    this.subs.add(
+      this.notificationService.pendingPlayerCount$.subscribe(
+        (count) => (this.pendingPlayerBadgeCount = count)
+      )
+    );
+
+    this.subs.add(
+      this.notificationService.newPlayer$.subscribe((player) => {
+        if (!player) return;
+        this.showPlayerToast(player);
+      })
+    );
   }
 
   ngOnDestroy(): void {
     this.notificationService.stopPolling();
     this.subs.unsubscribe();
+    if (this.upcomingCheckHandle !== null) {
+      clearInterval(this.upcomingCheckHandle);
+    }
   }
 
   private showToast(reservation: Reservation): void {
     this.toasts = [reservation, ...this.toasts].slice(0, 3);
+    this.cdr.detectChanges();
     setTimeout(() => this.dismissToast(reservation._id), 6_000);
   }
 
   dismissToast(id: string): void {
     this.toasts = this.toasts.filter((r) => r._id !== id);
+    this.cdr.detectChanges();
+  }
+
+  private showPlayerToast(player: Player): void {
+    this.playerToasts = [player, ...this.playerToasts].slice(0, 3);
+    this.cdr.detectChanges();
+    setTimeout(() => this.dismissPlayerToast(player._id), 6_000);
+  }
+
+  dismissPlayerToast(id: string): void {
+    this.playerToasts = this.playerToasts.filter((p) => p._id !== id);
+    this.cdr.detectChanges();
+  }
+
+  private startUpcomingCheck(): void {
+    this.checkUpcomingSessions();
+    this.upcomingCheckHandle = setInterval(() => this.checkUpcomingSessions(), 60_000);
+  }
+
+  checkUpcomingSessions(): void {
+    const bookingAlerts: UpcomingAlert[] = this.todayBookings
+      .filter((b) => {
+        const mins = this.minutesUntil(b.StartTime);
+        return mins >= 1 && mins <= 15 && !this.dismissedAlertIds.has(b._id);
+      })
+      .map((b) => ({ id: b._id, label: b.playerName, courtId: b.courtId, startTime: b.StartTime, type: 'booking' as const }));
+
+    const blockedAlerts: UpcomingAlert[] = this.todayBlocked
+      .filter((s) => {
+        const mins = this.minutesUntil(s.StartTime);
+        return mins >= 1 && mins <= 15 && !this.dismissedAlertIds.has(s._id);
+      })
+      .map((s) => ({ id: s._id!, label: s.reason, courtId: s.courtId, startTime: s.StartTime, type: 'blocked' as const }));
+
+    this.upcomingAlerts = [...bookingAlerts, ...blockedAlerts]
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
+    this.cdr.detectChanges();
+  }
+
+  minutesUntil(startTime: string): number {
+    const [h, m] = startTime.split(':').map(Number);
+    const now = new Date();
+    return (h * 60 + m) - (now.getHours() * 60 + now.getMinutes());
+  }
+
+  dismissUpcomingAlert(id: string): void {
+    this.dismissedAlertIds.add(id);
+    this.checkUpcomingSessions();
   }
 
   toggleProfile(): void {
@@ -114,6 +196,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           .filter(s => s.ReserveDate === todayStr)
           .sort((a, b) => a.StartTime.localeCompare(b.StartTime));
         this.todayLoading = false;
+        this.checkUpcomingSessions();
         this.cdr.detectChanges();
       },
       error: () => { this.todayLoading = false; this.cdr.detectChanges(); }
@@ -154,5 +237,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
   get username(): string | null {
     return this.auth.getUsername();
   }
-
 }

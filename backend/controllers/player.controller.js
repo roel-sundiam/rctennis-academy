@@ -66,4 +66,37 @@ async function deletePlayer(req, res, next) {
   }
 }
 
-module.exports = { getPlayers, getAllPlayers, createPlayer, updatePlayer, deletePlayer };
+async function registerPlayer(req, res, next) {
+  try {
+    const { name, contactNumber } = req.body;
+    if (!name || !name.trim()) {
+      return res.status(400).json({ message: 'Player name is required.' });
+    }
+    const player = new Player({
+      name: name.trim(),
+      contactNumber: contactNumber || '',
+      isActive: false,
+      registrationStatus: 'pending',
+    });
+    await player.save();
+    res.status(201).json({ message: 'Registration submitted. An admin will review your request.' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function approvePlayer(req, res, next) {
+  try {
+    const player = await Player.findByIdAndUpdate(
+      req.params.id,
+      { isActive: true, registrationStatus: 'approved' },
+      { new: true }
+    );
+    if (!player) return res.status(404).json({ message: 'Player not found.' });
+    res.json(player);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { getPlayers, getAllPlayers, createPlayer, updatePlayer, deletePlayer, registerPlayer, approvePlayer };

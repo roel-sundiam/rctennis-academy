@@ -3,5 +3,6 @@ export interface Player {
   name: string;
   contactNumber?: string;
   isActive: boolean;
+  registrationStatus?: 'pending' | 'approved';
   createdAt: string;
 }

@@ -19,6 +19,7 @@
         <li><a href="#services" (click)="closeMenu()">Services</a></li>
         <li><a href="#tournaments" (click)="closeMenu()">Tournaments</a></li>
         <li><a routerLink="/booking" (click)="closeMenu()" class="landing-nav__cta">Book Now</a></li>
+        <li><button class="landing-nav__register-btn" (click)="openRegisterModal()">Register</button></li>
         <li><a href="#contact" (click)="closeMenu()">Contact</a></li>
       </ul>
     </div>
@@ -112,6 +113,7 @@
   </section>
 
   <!-- ===== UPCOMING TOURNAMENTS ===== -->
+  @if (tournamentsLoading() || tournamentsError() || tournaments().length > 0) {
   <section id="tournaments" class="landing-tournaments">
     <div class="landing-section-inner">
       <header class="landing-section-header">
@@ -178,6 +180,7 @@
       }
     </div>
   </section>
+  }
 
   <!-- ===== ABOUT ===== -->
   <section id="about" class="landing-about">
@@ -321,6 +324,44 @@
       </div>
     </div>
   </section>
+
+  <!-- ===== REGISTER MODAL ===== -->
+  @if (showRegisterModal()) {
+    <div class="landing-modal-backdrop" (click)="closeRegisterModal()" aria-hidden="true"></div>
+    <div class="landing-modal" role="dialog" aria-modal="true" aria-labelledby="register-modal-title">
+      <button class="landing-modal__close" (click)="closeRegisterModal()" aria-label="Close">&#10005;</button>
+
+      @if (registerSuccess()) {
+        <div class="landing-modal__success">
+          <div class="landing-modal__success-icon" aria-hidden="true">&#10003;</div>
+          <h2>Registration Submitted!</h2>
+          <p>Your registration has been received. An admin will review and approve your account shortly.</p>
+          <button class="landing-btn landing-btn--primary" (click)="closeRegisterModal()">Done</button>
+        </div>
+      } @else {
+        <h2 id="register-modal-title" class="landing-modal__title">Register as a Player</h2>
+        <p class="landing-modal__sub">Join the academy roster. Once approved, you can book sessions.</p>
+
+        @if (registerError()) {
+          <div class="landing-modal__error">{{ registerError() }}</div>
+        }
+
+        <div class="landing-modal__form">
+          <div class="landing-modal__field">
+            <label for="reg-name" class="landing-modal__label">Full Name <span class="landing-modal__required">*</span></label>
+            <input id="reg-name" type="text" class="landing-modal__input" [(ngModel)]="registerForm.name" placeholder="e.g. Juan dela Cruz" [disabled]="registerLoading()" />
+          </div>
+          <div class="landing-modal__field">
+            <label for="reg-contact" class="landing-modal__label">Contact Number</label>
+            <input id="reg-contact" type="tel" class="landing-modal__input" [(ngModel)]="registerForm.contactNumber" placeholder="e.g. 09171234567" [disabled]="registerLoading()" />
+          </div>
+          <button class="landing-btn landing-btn--primary landing-modal__submit" (click)="submitRegister()" [disabled]="registerLoading()">
+            {{ registerLoading() ? 'Submitting…' : 'Submit Registration' }}
+          </button>
+        </div>
+      }
+    </div>
+  }
 
   <!-- ===== FOOTER ===== -->
   <footer class="landing-footer">

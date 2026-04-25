@@ -27,6 +27,15 @@ export class PlayersPanelComponent implements OnInit {
   editLoading = false;
 
   deleteLoading: Record<string, boolean> = {};
+  approveLoading: Record<string, boolean> = {};
+
+  get pendingPlayers(): Player[] {
+    return this.players.filter(p => p.registrationStatus === 'pending');
+  }
+
+  get managedPlayers(): Player[] {
+    return this.players.filter(p => p.registrationStatus !== 'pending');
+  }
 
   constructor(
     private playerService: PlayerService,
@@ -112,6 +121,22 @@ export class PlayersPanelComponent implements OnInit {
       error: err => {
         this.editLoading = false;
         this.editError = err.error?.message || 'Failed to update player.';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  approvePlayer(id: string): void {
+    this.approveLoading[id] = true;
+    this.playerService.approvePlayer(id).subscribe({
+      next: updated => {
+        const idx = this.players.findIndex(p => p._id === updated._id);
+        if (idx > -1) this.players[idx] = updated;
+        this.approveLoading[id] = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.approveLoading[id] = false;
         this.cdr.detectChanges();
       }
     });

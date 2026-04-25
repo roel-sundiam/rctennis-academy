@@ -35,19 +35,44 @@
   </div>
 }
 
+<!-- Pending Registrations -->
+@if (!loading && pendingPlayers.length > 0) {
+  <div class="card card--flat mb-md" style="border-left: 3px solid #f59e0b;">
+    <h4 style="margin-bottom: var(--space-sm); color: #92400e;">Pending Registrations ({{ pendingPlayers.length }})</h4>
+    <div class="stack stack--sm">
+      @for (player of pendingPlayers; track player._id) {
+        <div class="booking-card">
+          <div class="cluster" style="justify-content: space-between;">
+            <div>
+              <span class="booking-card__name">{{ player.name }}</span>
+              <span class="badge badge--pending" style="margin-left: 8px;">Pending</span>
+            </div>
+            <button class="btn btn-primary btn-sm" [disabled]="approveLoading[player._id]" (click)="approvePlayer(player._id)">
+              @if (approveLoading[player._id]) { Approving... } @else { Approve }
+            </button>
+          </div>
+          @if (player.contactNumber) {
+            <span class="booking-card__meta">{{ player.contactNumber }}</span>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}
+
 <!-- Players List -->
 @if (loading) {
   <div class="loading-row">
     <div class="spinner" style="margin:0;"></div>
     Loading players...
   </div>
-} @else if (players.length === 0) {
+} @else if (managedPlayers.length === 0) {
   <div class="empty-state">
     <p>No players yet. Add one above.</p>
   </div>
 } @else {
   <div class="stack stack--sm">
-    @for (player of players; track player._id) {
+    @for (player of managedPlayers; track player._id) {
 
       <!-- Edit mode -->
       @if (editingId === player._id) {

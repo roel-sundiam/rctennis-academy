@@ -28,4 +28,12 @@ export class PlayerService {
   deletePlayer(id: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
   }
+
+  registerPlayer(data: { name: string; contactNumber?: string }): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/register`, data);
+  }
+
+  approvePlayer(id: string): Observable<Player> {
+    return this.http.patch<Player>(`${this.apiUrl}/${id}/approve`, {});
+  }
 }

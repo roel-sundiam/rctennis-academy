@@ -611,11 +611,79 @@
   }
 }
 
+/* ── Player registration toast (left side) ──────────────────────── */
+
+.toast-stack--players {
+  right: auto;
+  left: 1.25rem;
+}
+
 @media (max-width: 480px) {
   .toast-stack {
     bottom: 0.75rem;
     right: 0.75rem;
     left: 0.75rem;
     width: auto;
+  }
+
+  .toast-stack--players {
+    bottom: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
+  }
+}
+
+/* ── Upcoming session alert banner ──────────────────────────────── */
+
+.upcoming-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 20px;
+  background: #fffbeb;
+  border-bottom: 1px solid #fde68a;
+}
+
+.upcoming-alert-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-left: 3px solid #d97706;
+  border-radius: 8px;
+  font-size: 0.8rem;
+
+  &__icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    flex: 1;
+    color: #92400e;
+    line-height: 1.4;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    color: #b45309;
+    font-size: 0.78rem;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    line-height: 1;
+    flex-shrink: 0;
+
+    &:hover {
+      background: #fde68a;
+      color: #78350f;
+    }
+  }
+
+  @media (max-width: 620px) {
+    padding: 6px 10px;
   }
 }
